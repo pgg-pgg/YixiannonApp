@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <com.pgg.yixiannonapp.widget.TabBar_Main
+        android:id="@+id/main_tabbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="visible"
+        app:icon="@drawable/tabbar_main"
+        app:name="@string/main_text"/>
+    <com.pgg.yixiannonapp.widget.TabBar_Main
+        android:id="@+id/classify_tabbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:icon="@drawable/tabbar_classify"
+        app:name="@string/classify_text">
+    </com.pgg.yixiannonapp.widget.TabBar_Main>
+
+    <com.pgg.yixiannonapp.widget.TabBar_Main
+        android:id="@+id/message_tabbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:icon="@drawable/tabbar_message"
+        app:name="@string/message_text">
+    </com.pgg.yixiannonapp.widget.TabBar_Main>
+
+    <com.pgg.yixiannonapp.widget.TabBar_Main
+        android:id="@+id/cart_tabbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:icon="@drawable/tabbar_cart"
+        app:name="@string/cart_text">
+    </com.pgg.yixiannonapp.widget.TabBar_Main>
+
+    <com.pgg.yixiannonapp.widget.TabBar_Main
+        android:id="@+id/my_tabbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:icon="@drawable/tabbar_my"
+        app:name="@string/my_text">
+    </com.pgg.yixiannonapp.widget.TabBar_Main>
+
+</LinearLayout>

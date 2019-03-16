@@ -4,6 +4,13 @@
     <string name="imtrue">确定</string>
     <string name="cancel">取消</string>
 
+    <!--底部菜单栏文字-->
+    <string name="main_text">首页</string>
+    <string name="classify_text">分类</string>
+    <string name="message_text">消息</string>
+    <string name="cart_text">购物车</string>
+    <string name="my_text">我的</string>
+
 
     <!-- slidingtutorial start/welcome引导页-->
     <string name="text_web_ceo">美文/微信头条</string>
