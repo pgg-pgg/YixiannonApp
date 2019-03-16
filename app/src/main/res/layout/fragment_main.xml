@@ -2,10 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <View
+        android:id="@+id/fillStatusBarView"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/colorAccent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="首页"/>
+    <include
+        android:id="@+id/layout_title"
+        layout="@layout/layout_title"/>
+
+    <com.youth.banner.Banner
+        android:id="@+id/mMainBanner"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_main_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

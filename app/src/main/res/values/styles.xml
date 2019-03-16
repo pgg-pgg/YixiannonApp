@@ -191,6 +191,13 @@
     </style>
 
 
+    <!-- 竖向分隔线 -->
+    <style name="DividerFixedWidth">
+        <item name="android:background">#d4d4d4</item>
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
     <!--<style name="MaterialSearchViewStyle">-->
         <!--&lt;!&ndash; Background for the search bar&ndash;&gt;-->
         <!--<item name="searchBackground">@color/colorPrimary</item>-->

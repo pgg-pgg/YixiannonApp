@@ -40,6 +40,9 @@ buildscript {
     //retrofit
     ext.retrofit_version = "2.1.0"
 
+    //banner
+    ext.banner_version = "1.4.10"
+
     repositories {
         google()
         jcenter()

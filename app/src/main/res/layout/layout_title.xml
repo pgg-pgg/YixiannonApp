@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.pgg.yixiannonapp.widget.TitleBar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@color/colorAccent"
+    android:layout_height="40dp">
+
+    <ImageView
+        android:id="@+id/iv_main_menu"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/icon_lt_menu"
+        android:layout_centerVertical="true" />
+
+    <com.pgg.yixiannonapp.widget.SearchTextFlipperView
+        android:id="@+id/ll_main_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="1"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_main_msg"
+        android:layout_marginLeft="8dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_rt_msg"
+            android:id="@+id/tv_main_msg"/>
+
+        <ImageView
+            android:id="@+id/iv_main_dot"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_alignRight="@id/tv_main_msg"
+            android:background="@drawable/dot"/>
+    </RelativeLayout>
+
+</com.pgg.yixiannonapp.widget.TitleBar>

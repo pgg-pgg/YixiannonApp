@@ -27,4 +27,8 @@
     <string name="save">保存</string>
     <string name="address">居住地</string>
 
+
+    <string name="top_search1">新鲜水果/海鲜水产/猪牛羊肉</string>
+    <string name="top_search2">禽类蛋品/新鲜蔬菜/速冻食品</string>
+
 </resources>

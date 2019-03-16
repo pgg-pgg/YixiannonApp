@@ -71,4 +71,7 @@ dependencies {
     //百分比布局
     implementation "com.android.support:percent:${appcompat_v7_version}"
 
+    //Banner
+    implementation "com.youth.banner:banner:${banner_version}"
+
 }
