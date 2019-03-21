@@ -12,15 +12,16 @@
         android:id="@+id/layout_title"
         layout="@layout/layout_title"/>
 
-    <com.youth.banner.Banner
-        android:id="@+id/mMainBanner"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_main_view"
+    <com.ajguan.library.EasyRefreshLayout
+        android:id="@+id/erl_main_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_main_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </com.ajguan.library.EasyRefreshLayout>
 
-    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

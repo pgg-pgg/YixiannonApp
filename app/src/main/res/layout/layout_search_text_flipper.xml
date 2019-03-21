@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_flipper_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
     android:layout_weight="1"
-    android:background="@drawable/corner_news_bg"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="8dp"
     android:paddingRight="20dp">
 
     <ImageView
+        android:id="@+id/iv_left_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/tv_search_drawable_selector" />
+        android:layout_height="wrap_content"/>
+        <!--android:src="@drawable/tv_search_drawable_selector" />-->
+    <View
+        android:id="@+id/v_line_vertical"
+        style="@style/DividerFixedWidth"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"/>
 
     <ViewFlipper
         android:id="@+id/mFlipperView"

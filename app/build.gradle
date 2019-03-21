@@ -74,4 +74,13 @@ dependencies {
     //Banner
     implementation "com.youth.banner:banner:${banner_version}"
 
+    //优化recycleView
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:${brvah_version}"
+
+    //下拉刷新，上拉加载
+    implementation "com.github.anzaizai:EasyRefreshLayout:${erl_version}"
+
+    //粘性布局
+    implementation "com.oushangfeng:PinnedSectionItemDecoration:${pin_sec_version}"
+
 }

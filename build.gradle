@@ -43,6 +43,15 @@ buildscript {
     //banner
     ext.banner_version = "1.4.10"
 
+    //BaseRecyclerViewAdapterHelper
+    ext.brvah_version = "2.8.0"
+
+    //EasyRefreshLayout
+    ext.erl_version = "1.1.2"
+
+    //粘性布局PinnedSectionItemDecoration
+    ext.pin_sec_version = "1.3.2"
+
     repositories {
         google()
         jcenter()
@@ -60,6 +69,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 

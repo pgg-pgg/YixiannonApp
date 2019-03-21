@@ -18,6 +18,8 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
 
     private BaseActivity mActivity;
     private View mLayoutView;
+    private boolean isInit = false;
+    private boolean isLoad = false;
 
     /**
      * 初始化布局文件
@@ -48,14 +50,17 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mLayoutView!=null){
             ViewGroup parent= (ViewGroup) mLayoutView.getParent();
+            isInit = true;
             if (parent!=null){
                 parent.removeView(mLayoutView);
             }
         }else {
             mLayoutView=getCreateView(inflater,container);
             ButterKnife.bind(this,mLayoutView);
+            isInit = true;
             initView();
         }
+        isCanLoadData();
         return mLayoutView;
 
     }
@@ -93,6 +98,53 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
                 activity.showProgress(flag,message);
             }
         }
+    }
+
+    /**
+     * 视图是否已经对用户可见，系统的方法
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isCanLoadData();
+    }
+
+    /**
+     * 懒加载
+     */
+    private void isCanLoadData() {
+        if (!isInit) {
+            return;
+        }
+        if (getUserVisibleHint() && !isLoad) {
+            lazyLoad();
+            isLoad = true;
+        } else {
+            if (isLoad) {
+                stopLoad();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isInit = false;
+    }
+
+
+    /**
+     * 第一次加载的处理   此处可以留给加载网络去处理
+     */
+    public void lazyLoad() {
+
+    }
+
+    /**
+     * 页面停止加载的处理
+     */
+    public void stopLoad() {
+
     }
 
     @Override

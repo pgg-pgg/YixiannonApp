@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="@dimen/dp_10"
+
+    android:background="@drawable/corner_news_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.pgg.yixiannonapp.widget.TopTitleView
+        android:id="@+id/ttv_news_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#668E8E8E"/>
+
+    <com.pgg.yixiannonapp.widget.GridViewChannelView
+        android:id="@+id/gr_top_news"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:listSelector="@android:color/transparent"
+        android:divider="@null"
+        android:numColumns="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

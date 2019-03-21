@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp">
+            <ImageView
+                android:id="@+id/iv_recommend_goods"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/corner_indicator_bg"/>
+            <TextView
+                android:id="@+id/tv_multi_label"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                android:text="多图"
+                android:background="@color/black"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_recommend_goods_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="星蓝花"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/iv_goods_label1"
+                    android:visibility="gone"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/tv_recommend_goods_view"
+                    android:background="@drawable/news_from_shape"
+                    android:layout_marginLeft="5dp"/>
+
+                <ImageView
+                    android:id="@+id/iv_goods_label2"
+                    android:visibility="gone"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/news_from_shape"
+                    android:layout_toRightOf="@id/iv_goods_label1"
+                    android:layout_marginLeft="5dp"/>
+
+                <TextView
+                    android:id="@+id/tv_recommend_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/red_hint"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="15sp"
+                    android:text="1.5 元/斤"
+                    android:textStyle="italic"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true">
+                <TextView
+                    android:id="@+id/tv_recommend_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="山西蜂县"
+                    android:textSize="14sp"
+                    android:textColor="@color/hint_gray"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_recommend_man_name"
+                    android:textColor="@color/hint_gray"
+                    android:layout_marginLeft="10dp"
+                    android:text="山楂树果经纪人"
+                    android:textSize="14sp"
+                    android:layout_toRightOf="@id/tv_recommend_address"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/hint_gray"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tv_recommend_time"
+                    android:textSize="14sp"
+                    android:text="2分钟前"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_recommend_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="单果重：15～20克以上 20～25克以上 30~35克以上"
+                android:singleLine="true"
+                android:layout_marginRight="10dp"
+                android:ellipsize="end"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#668E8E8E"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"/>
+
+</LinearLayout>
