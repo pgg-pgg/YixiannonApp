@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_type_container"
+    android:background="@color/gray_line"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:layout_height="40dp">
+
+    <View
+        android:id="@+id/v_is_check"
+        android:layout_width="5dp"
+        android:visibility="invisible"
+        android:layout_height="match_parent"
+        android:background="@color/red_hint"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
+    <TextView
+        android:id="@+id/tv_type_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="新鲜水果"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:gravity="center"/>
+</LinearLayout>
