@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="240dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/my_order"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/common_padding_middle"
+                android:paddingBottom="@dimen/common_padding_middle">
+
+                <TextView
+                    android:id="@+id/mWaitPayOrderTv"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_order_wait_pay"
+                    android:text="@string/wait_pay_order" />
+
+                <TextView
+                    android:id="@+id/mWaitConfirmOrderTv"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_order_wait_confirm"
+                    android:text="@string/wait_confirm_order" />
+
+                <TextView
+                    android:id="@+id/mCompleteOrderTv"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_order_completed"
+                    android:text="@string/complete_order" />
+
+                <TextView
+                    android:id="@+id/mEvaluationOrderTv"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_order_evaluation"
+                    android:text="@string/wait_evaluation" />
+
+                <View style="@style/DividerFixedWidth" />
+
+                <TextView
+                    android:id="@+id/mAllOrderTv"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_order"
+                    android:text="@string/my_order" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="@string/my_center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/common_padding_middle"
+                android:paddingBottom="@dimen/common_padding_middle">
+
+                <TextView
+                    android:id="@+id/tv_my_money"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_money"
+                    android:text="@string/my_money" />
+
+                <TextView
+                    android:id="@+id/tv_my_bill"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_order"
+                    android:text="@string/my_bill" />
+
+                <TextView
+                    android:id="@+id/tv_my_coupon"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_coupon"
+                    android:text="@string/my_coupon" />
+
+                <TextView
+                    android:id="@+id/tv_my_vip"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_vip"
+                    android:text="@string/my_vip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/common_padding_middle"
+                android:paddingBottom="@dimen/common_padding_middle">
+
+                <TextView
+                    android:id="@+id/tv_my_evaluation"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_evaluation"
+                    android:text="@string/my_evaluation" />
+
+                <TextView
+                    android:id="@+id/tv_my_goodsfrom"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_goodsfrom"
+                    android:text="@string/my_goodsfrom" />
+
+                <TextView
+                    android:id="@+id/tv_my_address"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_address"
+                    android:text="@string/my_address" />
+
+                <TextView
+                    android:id="@+id/tv_my_question"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_question"
+                    android:text="@string/my_question" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/common_padding_middle"
+                android:paddingBottom="@dimen/common_padding_middle">
+
+                <TextView
+                    android:id="@+id/tv_my_phone"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_phone"
+                    android:text="@string/my_phone" />
+
+                <TextView
+                    android:id="@+id/tv_my_opinion"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_opinion"
+                    android:text="@string/my_opinion" />
+                <TextView style="@style/MeOrderLabelStyle" />
+                <TextView style="@style/MeOrderLabelStyle" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

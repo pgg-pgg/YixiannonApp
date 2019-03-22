@@ -32,8 +32,28 @@
     <string name="top_search2">禽类蛋品/新鲜蔬菜/速冻食品</string>
     <string name="load_ing">正在加载…</string>
     <string name="load_complete">加载成功</string>
+    <string name="coming_soon_tip">敬请期待~~~</string>
 
     <string name="top_news_title">农头条</string>
     <string name="favr_title">为您推荐</string>
+
+
+    <string name="my_order">我的订单</string>
+    <string name="wait_pay_order">待付款</string>
+    <string name="wait_confirm_order">待收货</string>
+    <string name="complete_order">已完成</string>
+    <string name="wait_evaluation">待评价</string>
+    <string name="my_center">我的中心</string>
+    <string name="my_money">我的余额</string>
+    <string name="my_bill">我的账单</string>
+    <string name="my_coupon">优惠券</string>
+    <string name="my_vip">我的特权</string>
+    <string name="my_evaluation">我的评价</string>
+    <string name="my_goodsfrom">关心货源</string>
+    <string name="my_address">收货地址</string>
+    <string name="my_question">常见问题</string>
+    <string name="my_phone">客服电话</string>
+    <string name="my_opinion">意见反馈</string>
+
 
 </resources>

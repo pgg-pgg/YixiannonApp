@@ -52,6 +52,9 @@ buildscript {
     //粘性布局PinnedSectionItemDecoration
     ext.pin_sec_version = "1.3.2"
 
+    ext.multi_state_view_version = '1.3.2'
+
+
     repositories {
         google()
         jcenter()

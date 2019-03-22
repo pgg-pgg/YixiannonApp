@@ -83,4 +83,13 @@ dependencies {
     //粘性布局
     implementation "com.oushangfeng:PinnedSectionItemDecoration:${pin_sec_version}"
 
+    //圆形控件
+    implementation "de.hdodenhof:circleimageview:2.1.0"
+
+    //MulitStateView
+    implementation "com.github.Kennyc1012:MultiStateView:$multi_state_view_version"
+
+    //购物车商品数量、增加和减少控制按钮
+    implementation 'ren.qinc.numberbutton:numberbutton:0.0.1'
+
 }
