@@ -1,11 +1,12 @@
 package com.pgg.yixiannonapp.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pgg.yixiannonapp.R;
@@ -20,7 +21,9 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
     private View ll_main_search;
     private View rl_main_msg;
     private View iv_main_menu;
+    private TextView tv_title;
     private Context context;
+    private TextView tv_title_right;
 
     public TitleBar(Context context) {
         this(context,null);
@@ -33,23 +36,39 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
     public TitleBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context=context;
+
     }
 
-    /**
-     * 当布局文件加载完成回调此方法
-     */
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        //得到孩子实例
-        iv_main_menu=getChildAt(0);
-        ll_main_search=getChildAt(1);
-        rl_main_msg=getChildAt(2);
+        iv_main_menu = findViewById(R.id.iv_main_menu);
+        tv_title = findViewById(R.id.tv_title);
+        tv_title_right = findViewById(R.id.tv_title_right);
+        ll_main_search = findViewById(R.id.ll_main_search);
+        rl_main_msg = findViewById(R.id.rl_main_msg);
         iv_main_menu.setOnClickListener(this);
         ll_main_search.setOnClickListener(this);
         rl_main_msg.setOnClickListener(this);
+        tv_title_right.setOnClickListener(this);
     }
 
+    public void setTitleName(String title){
+        tv_title.setVisibility(VISIBLE);
+        tv_title.setText(title);
+    }
+
+    public void setSearchVisible(boolean visible){
+        ll_main_search.setVisibility(visible?VISIBLE:GONE);
+    }
+
+    public void setMainMsgVisible(boolean visible){
+        rl_main_msg.setVisibility(visible?VISIBLE:GONE);
+        tv_title_right.setVisibility(!visible?VISIBLE:GONE);
+    }
+    public void setMenuVisible(boolean visible){
+        iv_main_menu.setVisibility(visible?VISIBLE:INVISIBLE);
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -64,6 +83,11 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
                 break;
             case R.id.rl_main_msg:
                 Toast.makeText(context,"消息",Toast.LENGTH_LONG).show();
+                break;
+
+            case R.id.tv_title_right:
+                //右侧管理
+                Toast.makeText(context,"管理",Toast.LENGTH_LONG).show();
                 break;
         }
     }

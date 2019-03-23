@@ -6,7 +6,12 @@ import android.widget.TextView;
 
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseFragment;
+import com.pgg.yixiannonapp.domain.CartGoods;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -152,7 +157,6 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void initView() {
-
     }
 
     @Override
