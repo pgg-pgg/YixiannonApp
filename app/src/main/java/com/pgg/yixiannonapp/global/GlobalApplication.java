@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.pgg.yixiannonapp.module.MainActivity;
 
 /**
@@ -33,6 +34,7 @@ public class GlobalApplication extends Application {
         super.onCreate();
         mInstance = this;
         initScreenSize();
+        Fresco.initialize(this);
     }
 
     public static void setMainActivity(MainActivity activity) {

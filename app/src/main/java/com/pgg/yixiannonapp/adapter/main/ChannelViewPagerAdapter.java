@@ -1,6 +1,7 @@
 package com.pgg.yixiannonapp.adapter.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.Toast;
 
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.module.MainActivity;
+import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
 
 import java.util.ArrayList;
@@ -76,6 +79,8 @@ public class ChannelViewPagerAdapter extends PagerAdapter {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Todo:频道的点击事件
                 Toast.makeText(context,mChannelEntities.get(position).get(i).getChannelName(),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context,GoodsDetailActivity.class);
+                context.startActivity(intent);
             }
         });
         container.addView(view);
