@@ -1,19 +1,23 @@
 package com.pgg.yixiannonapp.module.my;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseFragment;
 import com.pgg.yixiannonapp.domain.CartGoods;
 import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyFragment extends BaseFragment implements View.OnClickListener {
@@ -75,12 +79,16 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
 
 
 
-    @Override
+    @OnClick({R.id.civ_userhead_me,R.id.fab_edit_view,R.id.mWaitPayOrderTv,R.id.mWaitConfirmOrderTv,R.id.mCompleteOrderTv,
+            R.id.mEvaluationOrderTv,R.id.tv_my_money,R.id.tv_my_bill,R.id.tv_my_coupon,R.id.tv_my_vip,R.id.tv_my_evaluation,
+            R.id.tv_my_goodsfrom,R.id.tv_my_address,R.id.tv_my_question,R.id.tv_my_phone,R.id.tv_my_opinion})
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.civ_userhead_me:
                 //头像点击事件
-
+                Toast.makeText(getContext(),"登录",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this.getContext(),LoginActivity.class);
+                getContext().startActivity(intent);
                 break;
             case R.id.fab_edit_view:
                 //编辑个人信息
@@ -131,7 +139,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
 
                 break;
             case R.id.tv_my_address:
-                //全部订单
+                //收货地址
 
                 break;
             case R.id.tv_my_question:

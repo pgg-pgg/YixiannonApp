@@ -37,6 +37,11 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".module.goods_detail.GoodsDetailActivity"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".module.login_register.login.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".module.login_register.register.RegisterActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

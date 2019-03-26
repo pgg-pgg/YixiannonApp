@@ -24,6 +24,8 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
     private TextView tv_title;
     private Context context;
     private TextView tv_title_right;
+    private LeftClickListener leftListener;
+    private RightClickListener rightClickListener;
 
     public TitleBar(Context context) {
         this(context,null);
@@ -58,6 +60,15 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
         tv_title.setText(title);
     }
 
+    public void setLeftImage(int drawable){
+        iv_main_menu.setVisibility(VISIBLE);
+        iv_main_menu.setBackgroundResource(drawable);
+    }
+
+    public void setRightText(String text){
+        setMainMsgVisible(false);
+        tv_title_right.setText(text);
+    }
     public void setSearchVisible(boolean visible){
         ll_main_search.setVisibility(visible?VISIBLE:GONE);
     }
@@ -73,7 +84,10 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.iv_main_menu:
-                Toast.makeText(context,"菜单",Toast.LENGTH_LONG).show();
+//                Toast.makeText(context,"菜单",Toast.LENGTH_LONG).show();
+                if (leftListener!=null){
+                    leftListener.setLeftOnClickListener();
+                }
                 break;
             case R.id.ll_main_search:
                 //搜索
@@ -87,8 +101,27 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
 
             case R.id.tv_title_right:
                 //右侧管理
-                Toast.makeText(context,"管理",Toast.LENGTH_LONG).show();
+//                Toast.makeText(context,"管理",Toast.LENGTH_LONG).show();
+                if (rightClickListener!=null){
+                    rightClickListener.setRightOnClickListener();
+                }
                 break;
         }
+    }
+
+    public interface LeftClickListener{
+        void setLeftOnClickListener();
+    }
+
+    public interface RightClickListener{
+        void setRightOnClickListener();
+    }
+
+    public void setLeftClickListener(LeftClickListener listener) {
+        this.leftListener = listener;
+    }
+
+    public void setRightClickListener(RightClickListener listener){
+        this.rightClickListener = listener;
     }
 }

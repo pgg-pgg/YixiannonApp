@@ -1,6 +1,5 @@
 package com.pgg.yixiannonapp.module.goods_detail.fragment;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseFragment;
-import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,20 +36,11 @@ public class GoodsDetailFragment extends BaseFragment {
     private int nowIndex;
     private float fromX;
     private List<TextView> tabTextList;
-    private GoodsDetailActivity activity;
     private GoodsConfigFragment goodsConfigFragment;
     private GoodsDetailWebFragment goodsDetailWebFragment;
     private Fragment nowFragment;
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
-    private View rootView;
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        activity = (GoodsDetailActivity) context;
-    }
 
     @Override
     public int getLayoutRes() {
