@@ -82,4 +82,6 @@
     <color name="theme_secondary_text_inverted">#8affffff</color>
     <color name="text_red">#ec0f38</color>
     <color name="text_black">#222222</color>
+    <color name="colorText">#66000000</color>
+
 </resources>
