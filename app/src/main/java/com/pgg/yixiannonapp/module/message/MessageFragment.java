@@ -11,6 +11,8 @@ import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseFragment;
 
 import butterknife.BindView;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 
 public class MessageFragment extends BaseFragment implements View.OnClickListener {
 
@@ -74,6 +76,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         //默认显示商品详情tab
         fragmentManager.beginTransaction().replace(R.id.frameLayout_message, nowFragment).commitAllowingStateLoss();
     }
+
 
     /**
      * 切换Fragment

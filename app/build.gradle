@@ -125,4 +125,10 @@ dependencies {
     implementation "cn.jiguang.imui:chatinput:${jiguang_chat_input}"
 
     implementation 'com.bartoszlipinski:recyclerviewheader2:2.0.1'
+
+    //图片选择
+    implementation 'com.lzy.widget:imagepicker:0.6.1'
+
+    implementation 'com.bigkoo:svprogresshud:1.0.6'
+
 }
