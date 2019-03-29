@@ -28,4 +28,22 @@ public interface UserService {
     @GET("User/login")
     Observable<Results<User>> login(@Query("user_name")String id, @Query("user_pwd") String password);
 
+
+    /**
+     * 更新接口
+     * @param user
+     * @return
+     */
+    @POST("User/updateUserInfo")
+    Observable<Results<User>> updateUserInfo(@Body User user);
+
+
+    /**
+     * 退出登录接口
+     * @param user
+     * @return
+     */
+    @POST("User/logout")
+    Observable<Results<User>> logout(@Body User user);
+
 }

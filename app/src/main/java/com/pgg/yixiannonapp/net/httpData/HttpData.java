@@ -9,6 +9,8 @@ import com.pgg.yixiannonapp.utils.FileUtils;
 
 import java.io.File;
 
+import io.rx_cache.DynamicKey;
+import io.rx_cache.EvictDynamicKey;
 import io.rx_cache.Reply;
 import io.rx_cache.internal.RxCache;
 import rx.Observable;
@@ -43,6 +45,22 @@ public class HttpData {
     public void register(Observer<Results<User>> observable, final User user) {
         Observable<Results<User>> data = userService.register(user);
         setSubscribe(data, observable);
+    }
+
+    public void login(Observer<Results<User>> observable, String id, String password) {
+        Observable<Results<User>> dataResults = userService.login(id, password);
+        Observable listObservable = providers.getUserResults(dataResults, new DynamicKey("user"), new EvictDynamicKey(false)).map(new HttpCacheHandler<User>());
+        setSubscribe(listObservable, observable);
+    }
+
+    public void updateUserInfo(Observer<Results<User>> observable, User user) {
+        Observable<Results<User>> dataResults = userService.updateUserInfo(user);
+        setSubscribe(dataResults, observable);
+    }
+
+    public void logout(Observer<Results<User>> observable, User user) {
+        Observable<Results<User>> dataResults = userService.logout(user);
+        setSubscribe(dataResults, observable);
     }
 
     private static <T> void setSubscribe(Observable<T> listObservable, Observer<T> observable) {

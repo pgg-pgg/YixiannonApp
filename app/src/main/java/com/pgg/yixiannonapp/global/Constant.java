@@ -26,4 +26,9 @@ public interface Constant {
 
     String BASE_URL = "http://10.0.2.2:8080/";
 
+    String USER_NAGE = "user_name";
+    String USER_NICK = "user_nick";
+    String USER_SIGN = "user_sign";
+    String USER_STATE = "user_state";
+
 }

@@ -33,10 +33,14 @@ import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseCommonActivity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
 import com.pgg.yixiannonapp.utils.GlideImageLoader;
+import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.widget.TitleBar;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,6 +49,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 import rx.Observer;
 
 public class RegisterActivity extends BaseCommonActivity {
@@ -81,9 +87,9 @@ public class RegisterActivity extends BaseCommonActivity {
     private ImagePicker imagePicker;
     ArrayList<ImageItem> images = null;
     private static String base64;
-    private static boolean isHasFace = false;
     private Bitmap mBitmap;
     private int degree;
+    private User user;
 
     @Override
     public void initContentView() {
@@ -138,41 +144,20 @@ public class RegisterActivity extends BaseCommonActivity {
                 edit_id.setVisibility(View.INVISIBLE);
                 edit_confirm_password.setVisibility(View.INVISIBLE);
 
-                String user_name = edit_id.getText().toString();
+                final String user_name = edit_id.getText().toString();
                 String user_nick_name = edit_nick_name.getText().toString();
-                String user_pwd = edit_password.getText().toString();
+                final String user_pwd = edit_password.getText().toString();
                 String confirm_pwd = edit_confirm_password.getText().toString();
 
                 inputAnimator(mInputLayout, mWidth, mHeight);
+                btn_signup.setEnabled(false);
 
-                if (base64==null){
-                    registerError("请设置你的头像");
-                    return;
-                }
-                if (TextUtils.isEmpty(user_name)||user_name.length()<4||user_name.length()>128){
-                    registerError("用户名长度限制为4-128个字节");
-                    return;
-                }
-                if (TextUtils.isEmpty(user_nick_name)){
-                    registerError("请填写昵称");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(user_pwd)||user_pwd.length()<4||user_pwd.length()>128){
-                    registerError("密码长度限制为4-128个字节");
-                    return;
-                }
-
-                if(!user_pwd.equals(confirm_pwd)){
-                    registerError("您两次输入密码不一致");
-                    return;
-                }
-                User user = new User();
+                if (checkIsRight(user_name, user_nick_name, user_pwd, confirm_pwd)) return;
+                user = new User();
                 user.setUser_icon(base64);
                 user.setUser_name(user_name);
                 user.setUser_nick_name(user_nick_name);
                 user.setUser_pwd(user_pwd);
-
                 HttpData.getInstance().register(new Observer<Results<User>>() {
                     @Override
                     public void onCompleted() {
@@ -187,7 +172,8 @@ public class RegisterActivity extends BaseCommonActivity {
                     @Override
                     public void onNext(Results<User> results) {
                         if (results.getCode()==0){
-                            //注册成功
+                            //注册成功,进行登录操作
+                            initLogin(user_name,user_pwd);
                             finish();
                         }else {
                             registerError("注册失败，请检查网络");
@@ -198,8 +184,63 @@ public class RegisterActivity extends BaseCommonActivity {
         }
     }
 
+    private boolean checkIsRight(String user_name, String user_nick_name, String user_pwd, String confirm_pwd) {
+        if (base64==null){
+            registerError("请设置你的头像");
+            return true;
+        }
+        if (TextUtils.isEmpty(user_name)||user_name.length()<4||user_name.length()>128){
+            registerError("用户名长度限制为4-128个字节");
+            return true;
+        }
+        if (TextUtils.isEmpty(user_nick_name)){
+            registerError("请填写昵称");
+            return true;
+        }
+
+        if (TextUtils.isEmpty(user_pwd)||user_pwd.length()<4||user_pwd.length()>128){
+            registerError("密码长度限制为4-128个字节");
+            return true;
+        }
+
+        if(!user_pwd.equals(confirm_pwd)){
+            registerError("您两次输入密码不一致");
+            return true;
+        }
+        return false;
+    }
+
+    private void initLogin(final String userName, String passWord){
+        JMessageClient.login(userName, passWord, new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                switch (i) {
+                    case 801003:
+                        registerError("用户名不存在");
+                        break;
+                    case 871301:
+                        registerError("密码格式错误");
+                        break;
+                    case 801004:
+                        registerError("密码错误");
+                        break;
+                    case 0:
+                        SPUtils.put(getContext(),Constant.USER_NAGE,user.getUser_name());
+                        SPUtils.put(getContext(),Constant.USER_NICK,user.getUser_nick_name());
+                        SPUtils.put(getContext(),Constant.USER_STATE,1);
+                        EventBus.getDefault().post(user);
+                        showToast("登陆成功");
+                        break;
+                    default:
+
+                        break;
+                }
+
+            }
+        });
+    }
+
     private void registerError(String message) {
-//        showToast(message);
         new SVProgressHUD(this).showInfoWithStatus(message);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -207,7 +248,7 @@ public class RegisterActivity extends BaseCommonActivity {
                 recovery();
             }
         },1000);
-
+        btn_signup.setEnabled(true);
     }
 
     /**

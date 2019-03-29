@@ -165,7 +165,12 @@
                     style="@style/MeOrderLabelStyle"
                     android:drawableTop="@drawable/icon_my_opinion"
                     android:text="@string/my_opinion" />
-                <TextView style="@style/MeOrderLabelStyle" />
+                <TextView
+                    android:id="@+id/tv_my_exit"
+                    android:visibility="invisible"
+                    style="@style/MeOrderLabelStyle"
+                    android:drawableTop="@drawable/icon_my_exit"
+                    android:text="@string/my_exit" />
                 <TextView style="@style/MeOrderLabelStyle" />
 
             </LinearLayout>

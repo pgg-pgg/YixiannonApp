@@ -1,24 +1,42 @@
 package com.pgg.yixiannonapp.module.my;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.svprogresshud.SVProgressHUD;
+import com.bumptech.glide.Glide;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseFragment;
 import com.pgg.yixiannonapp.domain.CartGoods;
+import com.pgg.yixiannonapp.domain.Results;
+import com.pgg.yixiannonapp.domain.User;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
+import com.pgg.yixiannonapp.module.my.activity.EditUserInfoActivity;
+import com.pgg.yixiannonapp.net.httpData.HttpData;
+import com.pgg.yixiannonapp.utils.GlideUtils;
+import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Observer;
 
 public class MyFragment extends BaseFragment implements View.OnClickListener {
 
@@ -77,22 +95,50 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.tv_my_opinion)
     TextView tv_my_opinion;
 
+    @BindView(R.id.tv_my_exit)
+    TextView tv_my_exit;
 
+    @Override
+    public int getLayoutRes() {
+        return R.layout.fragment_my;
+    }
 
-    @OnClick({R.id.civ_userhead_me,R.id.fab_edit_view,R.id.mWaitPayOrderTv,R.id.mWaitConfirmOrderTv,R.id.mCompleteOrderTv,
-            R.id.mEvaluationOrderTv,R.id.tv_my_money,R.id.tv_my_bill,R.id.tv_my_coupon,R.id.tv_my_vip,R.id.tv_my_evaluation,
-            R.id.tv_my_goodsfrom,R.id.tv_my_address,R.id.tv_my_question,R.id.tv_my_phone,R.id.tv_my_opinion})
+    @Override
+    public void initView() {
+        String user_name = SPUtils.get(getContext(), Constant.USER_NAGE, "") + "";
+        String user_nick_name = SPUtils.get(getContext(), Constant.USER_NICK, "") + "";
+        String user_sign = SPUtils.get(getContext(), Constant.USER_SIGN, "") + "";
+        fab_edit_view.setEnabled(false);
+        if ((int) SPUtils.get(getContext(), Constant.USER_STATE, 0) == 1) {
+            //用户已登录
+            Glide.with(getContext()).load(Constant.BASE_URL + "image/" + user_name + ".jpg").
+                    placeholder(R.drawable.ocnyang).error(R.drawable.ocnyang)
+                    .centerCrop().into(civ_userhead_me);
+            civ_userhead_me.setEnabled(false);
+            tv_username_me.setText(TextUtils.isEmpty(user_nick_name) ? "未设置" : user_nick_name);
+            tv_motto_me.setText(TextUtils.isEmpty(user_sign) ? "登录后设置" : user_sign);
+            tv_my_exit.setVisibility(View.VISIBLE);
+            fab_edit_view.setEnabled(true);
+        }
+        EventBus.getDefault().register(this);
+    }
+
+    @OnClick({R.id.civ_userhead_me, R.id.fab_edit_view, R.id.mWaitPayOrderTv, R.id.mWaitConfirmOrderTv, R.id.mCompleteOrderTv,
+            R.id.mEvaluationOrderTv, R.id.tv_my_money, R.id.tv_my_bill, R.id.tv_my_coupon, R.id.tv_my_vip, R.id.tv_my_evaluation,
+            R.id.tv_my_goodsfrom, R.id.tv_my_address, R.id.tv_my_question, R.id.tv_my_phone, R.id.tv_my_opinion, R.id.tv_my_exit})
     public void onClick(View view) {
-        switch (view.getId()){
+        Intent intent;
+        switch (view.getId()) {
             case R.id.civ_userhead_me:
                 //头像点击事件
-                Toast.makeText(getContext(),"登录",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this.getContext(),LoginActivity.class);
+                Toast.makeText(getContext(), "登录", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this.getContext(), LoginActivity.class);
                 getContext().startActivity(intent);
                 break;
             case R.id.fab_edit_view:
                 //编辑个人信息
-
+                intent = new Intent(getContext(), EditUserInfoActivity.class);
+                startActivity(intent);
                 break;
             case R.id.mWaitPayOrderTv:
                 //待付款
@@ -155,16 +201,78 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                 //意见反馈
 
                 break;
+
+            case R.id.tv_my_exit:
+                //退出登录
+                final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
+                svProgressHUD.show();
+                final User user = new User();
+                user.setUser_name(SPUtils.get(getContext(), Constant.USER_NAGE, "") + "");
+                user.setUser_state(0);
+                HttpData.getInstance().logout(new Observer<Results<User>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        svProgressHUD.dismiss();
+                    }
+
+                    @Override
+                    public void onNext(Results<User> userResults) {
+                        svProgressHUD.dismiss();
+                        if (userResults.getCode() == 0) {
+                            JMessageClient.logout();
+                            SPUtils.put(getContext(), Constant.USER_STATE, 0);
+                            SPUtils.put(getContext(), Constant.USER_NAGE, "");
+                            SPUtils.put(getContext(), Constant.USER_SIGN, "");
+                            SPUtils.put(getContext(), Constant.USER_NICK, "");
+                            //退出登录成功之后，通知界面刷新
+                            setLoginState(user, false);
+                        } else {
+
+                        }
+
+                    }
+                }, user);
+
+                break;
         }
     }
 
-    @Override
-    public int getLayoutRes() {
-        return R.layout.fragment_my;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(User user) {
+        setLoginState(user, true);
+    }
+
+    private void setLoginState(User user, boolean isLogin) {
+        if (isLogin) {
+            Glide.with(getContext()).load(Constant.BASE_URL + "image/" + user.getUser_name() + ".jpg").
+                    placeholder(R.drawable.ocnyang).error(R.drawable.ocnyang)
+                    .centerCrop().into(civ_userhead_me);
+            civ_userhead_me.setEnabled(false);
+            fab_edit_view.setEnabled(true);
+            tv_username_me.setText(user.getUser_nick_name());
+            tv_motto_me.setText(TextUtils.isEmpty(user.getUser_sign()) ? "登录后设置" : user.getUser_sign());
+        } else {
+            civ_userhead_me.setImageResource(R.drawable.ocnyang);
+            civ_userhead_me.setEnabled(true);
+            tv_my_exit.setVisibility(View.INVISIBLE);
+            tv_motto_me.setText("登录后设置");
+            tv_username_me.setText("未设置");
+        }
+
     }
 
     @Override
-    public void initView() {
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override

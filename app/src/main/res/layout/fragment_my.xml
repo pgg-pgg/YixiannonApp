@@ -27,7 +27,7 @@
                 android:gravity="right"
                 android:maxLines="2"
                 android:paddingBottom="30dp"
-                android:text="一直被模仿，从未被超越！"
+                android:text="登录后设置"
                 android:textColor="@color/white"
                 android:textSize="12sp"/>
         </FrameLayout>

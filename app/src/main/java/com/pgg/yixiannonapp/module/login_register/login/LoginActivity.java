@@ -1,7 +1,10 @@
 package com.pgg.yixiannonapp.module.login_register.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -11,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -18,11 +22,23 @@ import com.nineoldandroids.animation.PropertyValuesHolder;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseCommonActivity;
+import com.pgg.yixiannonapp.domain.Results;
+import com.pgg.yixiannonapp.domain.User;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.login_register.register.RegisterActivity;
+import com.pgg.yixiannonapp.net.httpData.HttpData;
+import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.widget.TitleBar;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
+import rx.Observer;
 
 public class LoginActivity extends BaseCommonActivity {
 
@@ -84,17 +100,82 @@ public class LoginActivity extends BaseCommonActivity {
         // 隐藏输入框
         mName.setVisibility(View.INVISIBLE);
         mPsw.setVisibility(View.INVISIBLE);
-
         inputAnimator(mInputLayout, mWidth, mHeight);
+        main_btn_login.setEnabled(false);
+        // 隐藏输入框
+        edit_password.setVisibility(View.INVISIBLE);
+        edit_id.setVisibility(View.INVISIBLE);
 
+        final String user_name = edit_id.getText().toString();
+        final String user_pwd = edit_password.getText().toString();
+
+
+        initLogin(user_name,user_pwd);
+
+    }
+
+    private void initLogin(final String user_name, final String user_pwd){
+        JMessageClient.login(user_name, user_pwd, new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                switch (i) {
+                    case 801003:
+                        loginError("用户名错误");
+                        break;
+                    case 871301:
+                        loginError("密码格式错误");
+                        break;
+                    case 801004:
+                        loginError("密码错误");
+                        break;
+                    case 0:
+                        HttpData.getInstance().login(new Observer<Results<User>>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                loginError("登录失败，请检查网络");
+                                Log.e("pgggg=====",e.getMessage());
+                            }
+
+                            @Override
+                            public void onNext(Results<User> results) {
+                                if (results.getCode()==0){
+                                    //登录成功,进行登录操作
+                                    SPUtils.put(getContext(),Constant.USER_NAGE,results.getData().getUser_name());
+                                    SPUtils.put(getContext(),Constant.USER_NICK,results.getData().getUser_nick_name());
+                                    SPUtils.put(getContext(),Constant.USER_STATE,1);
+                                    EventBus.getDefault().post(results.getData());
+                                    finish();
+                                }else {
+                                    loginError("登录成功，请检查网络");
+                                }
+                            }
+                        },user_name,user_pwd);
+                        break;
+                    default:
+
+                        break;
+                }
+
+            }
+        });
+    }
+
+
+    private void loginError(String message) {
+        new SVProgressHUD(this).showInfoWithStatus(message);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 recovery();
             }
-        },2000);
+        },1000);
+        main_btn_login.setEnabled(true);
     }
-
     @Override
     public void initPresenter() {
 
@@ -171,6 +252,8 @@ public class LoginActivity extends BaseCommonActivity {
     private void recovery() {
         progress.setVisibility(View.GONE);
         mInputLayout.setVisibility(View.VISIBLE);
+        edit_id.setVisibility(View.VISIBLE);
+        edit_password.setVisibility(View.VISIBLE);
         mName.setVisibility(View.VISIBLE);
         mPsw.setVisibility(View.VISIBLE);
 
@@ -215,15 +298,6 @@ public class LoginActivity extends BaseCommonActivity {
         public float getInterpolation(float input) {
             return (float) (Math.pow(2, -10 * input)
                     * Math.sin((input - factor / 4) * (2 * Math.PI) / factor) + 1);
-        }
-    }
-
-    @OnClick({R.id.main_btn_login})
-    public void onClick(View v){
-        switch (v.getId()){
-            case R.id.main_btn_login:
-                //登录按钮
-                break;
         }
     }
 }
