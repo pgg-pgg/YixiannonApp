@@ -88,25 +88,33 @@ public class EditUserInfoActivity extends BaseCommonActivity {
         layout_title.setSearchVisible(false);
         layout_title.setMainMsgVisible(false);
         layout_title.setTitleName("个人信息");
-        final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
+
         layout_title.setRightClickListener(new TitleBar.RightClickListener() {
+
             @Override
             public void setRightOnClickListener() {
-                //保存
-                svProgressHUD.show();
-
                 String user_nick_name = user_name_userinfo.getText().toString();
                 String user_sign = user_geyan_userinfo.getText().toString();
                 String user_real_name = user_real_name_userinfo.getText().toString();
                 String user_identity_card = user_sfz_userinfo.getText().toString();
                 String user_mobile = user_phone_userinfo.getText().toString();
+                final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
+                if (TextUtils.isEmpty(user_nick_name)&&TextUtils.isEmpty(user_sign)
+                        &&TextUtils.isEmpty(user_real_name)&&TextUtils.isEmpty(user_identity_card)
+                        &&TextUtils.isEmpty(user_mobile)&&TextUtils.isEmpty(base64)){
+                    //如果没有修改任何信息，那么直接退出界面
+                    finish();
+                    return;
+                }
+                //保存
+                svProgressHUD.show();
 
                 final User user = new User();
-                user.setUser_nick_name(TextUtils.isEmpty(user_nick_name)?"":user_nick_name);
-                user.setUser_sign(TextUtils.isEmpty(user_sign)?"":user_sign);
-                user.setUser_real_name(TextUtils.isEmpty(user_real_name)?"":user_real_name);
-                user.setUser_identity_card(TextUtils.isEmpty(user_identity_card)?"":user_identity_card);
-                user.setUser_mobile(TextUtils.isEmpty(user_mobile)?"":user_mobile);
+                user.setUser_nick_name(TextUtils.isEmpty(user_nick_name)?""+SPUtils.get(getContext(),Constant.USER_NICK,""):user_nick_name);
+                user.setUser_sign(TextUtils.isEmpty(user_sign)?""+SPUtils.get(getContext(),Constant.USER_SIGN,""):user_sign);
+                user.setUser_real_name(TextUtils.isEmpty(user_real_name)?""+SPUtils.get(getContext(),Constant.USER_REAL_NAME,""):user_real_name);
+                user.setUser_identity_card(TextUtils.isEmpty(user_identity_card)?""+SPUtils.get(getContext(),Constant.USER_IDENTITY_CARD,""):user_identity_card);
+                user.setUser_mobile(TextUtils.isEmpty(user_mobile)?""+SPUtils.get(getContext(),Constant.USER_MOBILE,""):user_mobile);
                 user.setUser_icon(TextUtils.isEmpty(base64)?"":base64);
                 user.setUser_name(SPUtils.get(getContext(),Constant.USER_NAGE,"")+"");
 
@@ -126,9 +134,13 @@ public class EditUserInfoActivity extends BaseCommonActivity {
                         svProgressHUD.dismiss();
                         if (userResults.getCode()==0){
                             svProgressHUD.showSuccessWithStatus("更新成功！");
+                            user.setUser_state("1");
                             EventBus.getDefault().post(user);
                             SPUtils.put(getContext(),Constant.USER_SIGN,user.getUser_sign());
                             SPUtils.put(getContext(),Constant.USER_NICK,user.getUser_nick_name());
+                            SPUtils.put(getContext(),Constant.USER_MOBILE,user.getUser_mobile());
+                            SPUtils.put(getContext(),Constant.USER_IDENTITY_CARD,user.getUser_identity_card());
+                            SPUtils.put(getContext(),Constant.USER_REAL_NAME,user.getUser_real_name());
                             finish();
                         }else {
                             svProgressHUD.showErrorWithStatus("更新失败");

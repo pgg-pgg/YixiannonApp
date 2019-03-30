@@ -227,7 +227,8 @@ public class RegisterActivity extends BaseCommonActivity {
                     case 0:
                         SPUtils.put(getContext(),Constant.USER_NAGE,user.getUser_name());
                         SPUtils.put(getContext(),Constant.USER_NICK,user.getUser_nick_name());
-                        SPUtils.put(getContext(),Constant.USER_STATE,1);
+                        SPUtils.put(getContext(),Constant.USER_STATE,"1");
+                        user.setUser_state("1");
                         EventBus.getDefault().post(user);
                         showToast("登陆成功");
                         break;
@@ -269,6 +270,7 @@ public class RegisterActivity extends BaseCommonActivity {
         intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, images);
         startActivityForResult(intent, 100);
     }
+
 
 
     /**

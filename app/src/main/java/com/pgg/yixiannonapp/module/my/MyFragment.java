@@ -109,7 +109,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
         String user_nick_name = SPUtils.get(getContext(), Constant.USER_NICK, "") + "";
         String user_sign = SPUtils.get(getContext(), Constant.USER_SIGN, "") + "";
         fab_edit_view.setEnabled(false);
-        if ((int) SPUtils.get(getContext(), Constant.USER_STATE, 0) == 1) {
+        if ((SPUtils.get(getContext(), Constant.USER_STATE, "0") + "").equals("1")) {
             //用户已登录
             Glide.with(getContext()).load(Constant.BASE_URL + "image/" + user_name + ".jpg").
                     placeholder(R.drawable.ocnyang).error(R.drawable.ocnyang)
@@ -208,7 +208,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                 svProgressHUD.show();
                 final User user = new User();
                 user.setUser_name(SPUtils.get(getContext(), Constant.USER_NAGE, "") + "");
-                user.setUser_state(0);
+                user.setUser_state("0");
                 HttpData.getInstance().logout(new Observer<Results<User>>() {
                     @Override
                     public void onCompleted() {
@@ -225,14 +225,9 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                         svProgressHUD.dismiss();
                         if (userResults.getCode() == 0) {
                             JMessageClient.logout();
-                            SPUtils.put(getContext(), Constant.USER_STATE, 0);
-                            SPUtils.put(getContext(), Constant.USER_NAGE, "");
-                            SPUtils.put(getContext(), Constant.USER_SIGN, "");
-                            SPUtils.put(getContext(), Constant.USER_NICK, "");
+                            clearUserInfoInLocal();
                             //退出登录成功之后，通知界面刷新
                             setLoginState(user, false);
-                        } else {
-
                         }
 
                     }
@@ -240,6 +235,16 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
 
                 break;
         }
+    }
+
+    private void clearUserInfoInLocal() {
+        SPUtils.put(getContext(), Constant.USER_STATE, "0");
+        SPUtils.put(getContext(), Constant.USER_NAGE, "");
+        SPUtils.put(getContext(), Constant.USER_SIGN, "");
+        SPUtils.put(getContext(), Constant.USER_NICK, "");
+        SPUtils.put(getContext(), Constant.USER_MOBILE, "");
+        SPUtils.put(getContext(), Constant.USER_IDENTITY_CARD, "");
+        SPUtils.put(getContext(), Constant.USER_REAL_NAME, "");
     }
 
 
@@ -255,11 +260,13 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                     .centerCrop().into(civ_userhead_me);
             civ_userhead_me.setEnabled(false);
             fab_edit_view.setEnabled(true);
+            tv_my_exit.setVisibility(View.VISIBLE);
             tv_username_me.setText(user.getUser_nick_name());
             tv_motto_me.setText(TextUtils.isEmpty(user.getUser_sign()) ? "登录后设置" : user.getUser_sign());
         } else {
             civ_userhead_me.setImageResource(R.drawable.ocnyang);
             civ_userhead_me.setEnabled(true);
+            fab_edit_view.setEnabled(false);
             tv_my_exit.setVisibility(View.INVISIBLE);
             tv_motto_me.setText("登录后设置");
             tv_username_me.setText("未设置");

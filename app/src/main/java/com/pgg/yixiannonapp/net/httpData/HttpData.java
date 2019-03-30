@@ -49,8 +49,7 @@ public class HttpData {
 
     public void login(Observer<Results<User>> observable, String id, String password) {
         Observable<Results<User>> dataResults = userService.login(id, password);
-        Observable listObservable = providers.getUserResults(dataResults, new DynamicKey("user"), new EvictDynamicKey(false)).map(new HttpCacheHandler<User>());
-        setSubscribe(listObservable, observable);
+        setSubscribe(dataResults, observable);
     }
 
     public void updateUserInfo(Observer<Results<User>> observable, User user) {

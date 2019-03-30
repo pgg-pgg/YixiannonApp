@@ -30,5 +30,8 @@ public interface Constant {
     String USER_NICK = "user_nick";
     String USER_SIGN = "user_sign";
     String USER_STATE = "user_state";
+    String USER_MOBILE = "user_mobile";
+    String USER_REAL_NAME = "user_real_name";
+    String USER_IDENTITY_CARD = "user_identity_card";
 
 }

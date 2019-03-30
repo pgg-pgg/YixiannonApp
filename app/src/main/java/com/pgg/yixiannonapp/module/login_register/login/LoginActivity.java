@@ -145,9 +145,8 @@ public class LoginActivity extends BaseCommonActivity {
                             public void onNext(Results<User> results) {
                                 if (results.getCode()==0){
                                     //登录成功,进行登录操作
-                                    SPUtils.put(getContext(),Constant.USER_NAGE,results.getData().getUser_name());
-                                    SPUtils.put(getContext(),Constant.USER_NICK,results.getData().getUser_nick_name());
-                                    SPUtils.put(getContext(),Constant.USER_STATE,1);
+                                    updateUserInLocal(results);
+                                    results.getData().setUser_state("1");
                                     EventBus.getDefault().post(results.getData());
                                     finish();
                                 }else {
@@ -163,6 +162,16 @@ public class LoginActivity extends BaseCommonActivity {
 
             }
         });
+    }
+
+    private void updateUserInLocal(Results<User> results) {
+        SPUtils.put(getContext(),Constant.USER_NAGE,results.getData().getUser_name());
+        SPUtils.put(getContext(),Constant.USER_NICK,results.getData().getUser_nick_name());
+        SPUtils.put(getContext(),Constant.USER_STATE,"1");
+        SPUtils.put(getContext(),Constant.USER_MOBILE,results.getData().getUser_mobile());
+        SPUtils.put(getContext(),Constant.USER_IDENTITY_CARD,results.getData().getUser_identity_card());
+        SPUtils.put(getContext(),Constant.USER_REAL_NAME,results.getData().getUser_real_name());
+        SPUtils.put(getContext(),Constant.USER_SIGN,results.getData().getUser_sign());
     }
 
 
