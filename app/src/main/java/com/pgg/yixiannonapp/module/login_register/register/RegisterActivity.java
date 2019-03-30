@@ -33,6 +33,7 @@ import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseCommonActivity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
+import com.pgg.yixiannonapp.domain.UserStateBean;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
@@ -230,6 +231,7 @@ public class RegisterActivity extends BaseCommonActivity {
                         SPUtils.put(getContext(),Constant.USER_STATE,"1");
                         user.setUser_state("1");
                         EventBus.getDefault().post(user);
+                        EventBus.getDefault().post(UserStateBean.getInstance("1"));
                         showToast("登陆成功");
                         break;
                     default:

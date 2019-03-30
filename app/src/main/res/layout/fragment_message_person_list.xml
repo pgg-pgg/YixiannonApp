@@ -5,68 +5,113 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="@color/colorText" />
-
     <RelativeLayout
-        android:id="@+id/fm_contact_msg"
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:background="@android:color/white"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:text="新朋友"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:paddingRight="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/icon_right" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="@color/colorText" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:layout_marginTop="12dp"
-        android:background="@color/colorText" />
-
-
-    <RelativeLayout
+        android:id="@+id/rl_no_login"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fm_contact_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
-
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/fm_contact_no"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/iv_empty"
+            android:src="@drawable/empty_icon"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_below="@id/iv_empty"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="还没有添加好友！点击去添加！"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:text="尚未登录"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:id="@+id/tv_to_login"
+                android:text="去登录 >"
+                android:textColor="@color/colorAccent"/>
+
+        </LinearLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_person_list"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="@color/colorText" />
+
+        <RelativeLayout
+            android:id="@+id/fm_contact_msg"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="新朋友"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:paddingRight="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_right" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="@color/colorText" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/colorText" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fm_contact_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/fm_contact_no"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="还没有添加好友！点击去添加！"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
 </LinearLayout>

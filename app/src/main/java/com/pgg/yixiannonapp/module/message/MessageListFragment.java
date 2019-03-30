@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +27,16 @@ import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.adapter.message.MessageRecyclerAdapter;
 import com.pgg.yixiannonapp.base.BaseFragment;
 import com.pgg.yixiannonapp.domain.MessageBean;
+import com.pgg.yixiannonapp.domain.User;
+import com.pgg.yixiannonapp.domain.UserStateBean;
+import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
+import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.utils.SharedPrefHelper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +69,7 @@ public class MessageListFragment extends Fragment {
     @BindView(R.id.fragment_main_rf)
     SwipeRefreshLayout mFragmentMainRf;
     private List<MessageBean> data = new ArrayList<>();
-    private List<Conversation> list=new ArrayList<>();
+    private List<Conversation> list = new ArrayList<>();
     Conversation conversation;
     @BindView(R.id.fragment_main_rv)
     RecyclerView mFragmentMainRv;
@@ -75,6 +85,11 @@ public class MessageListFragment extends Fragment {
     TextView mItemMainContent;
     @BindView(R.id.item_main_time)
     TextView mItemMainTime;
+    @BindView(R.id.rl_no_login)
+    RelativeLayout rl_no_login;
+    @BindView(R.id.tv_to_login)
+    TextView tv_to_login;
+
     private int groupID = 0;
     MessageBean bean;
     //接收撤回的消息
@@ -82,18 +97,43 @@ public class MessageListFragment extends Fragment {
     Handler handler = new Handler();
     //漫游
     HandlerThread mThread;
+    private boolean isLogin = false;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.fragment_message_list, null);
+        EventBus.getDefault().register(this);
+        isLogin = (SPUtils.get(getContext(), Constant.USER_STATE, "0") + "").equals("1");
         unbinder = ButterKnife.bind(this, view);
-        JMessageClient.registerEventReceiver(this);
-        list= JMessageClient.getConversationList();
-        initView();
+        if (isLogin) {
+            mFragmentMainRf.setVisibility(View.VISIBLE);
+            rl_no_login.setVisibility(View.GONE);
+            JMessageClient.registerEventReceiver(this);
+            list = JMessageClient.getConversationList();
+            initView();
+        } else {
+            mFragmentMainRf.setVisibility(View.GONE);
+            rl_no_login.setVisibility(View.VISIBLE);
+        }
         return view;
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(UserStateBean userStateBean) {
+        if (userStateBean != null) {
+            if (userStateBean.user_state.equals("0")) {
+                mFragmentMainRf.setVisibility(View.GONE);
+                rl_no_login.setVisibility(View.VISIBLE);
+            } else {
+                mFragmentMainRf.setVisibility(View.VISIBLE);
+                rl_no_login.setVisibility(View.GONE);
+                JMessageClient.registerEventReceiver(this);
+                list = JMessageClient.getConversationList();
+                initView();
+            }
+        }
     }
 
 
@@ -113,7 +153,7 @@ public class MessageListFragment extends Fragment {
     /*下拉刷新*/
     private void initRefresh() {
         mFragmentMainRf.setColorSchemeResources(
-                R.color.white
+                R.color.red_hint
                 , R.color.colorAccent
                 , R.color.aurora_msg_receive_bubble_default_color
                 , R.color.black);
@@ -140,7 +180,8 @@ public class MessageListFragment extends Fragment {
             }
         });
     }
-    private void updataData(){
+
+    private void updataData() {
         data.clear();
         adapter.clear();
         initDataBean();
@@ -158,6 +199,9 @@ public class MessageListFragment extends Fragment {
     public void onDestroy() {
         JMessageClient.unRegisterEventReceiver(this);
         super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     /*接收消息*/
@@ -171,7 +215,7 @@ public class MessageListFragment extends Fragment {
                 if (JMessageClient.getMyInfo().getUserName() == "1006" || JMessageClient.getMyInfo().getUserName().equals("1006")) {
 
                     final Message message1 =
-                            JMessageClient.createSingleTextMessage(((UserInfo)msg.getTargetInfo()).getUserName(), SharedPrefHelper.getInstance().getAppKey(), "[自动回复]你好，我是机器人");
+                            JMessageClient.createSingleTextMessage(((UserInfo) msg.getTargetInfo()).getUserName(), SharedPrefHelper.getInstance().getAppKey(), "[自动回复]你好，我是机器人");
 //                    for (int i=0;i<list.size();i++){
 //                        conversation = list.get(i);
 //                        Message message=conversation.createSendMessage(new TextContent("[自动回复]你好，我是机器人"));
@@ -194,8 +238,9 @@ public class MessageListFragment extends Fragment {
             public void run() {
                 updataData();
             }
-        },500);
+        }, 500);
     }
+
     /**
      * 接收离线消息
      *
@@ -206,6 +251,7 @@ public class MessageListFragment extends Fragment {
         Log.e("refreshOffline=====", ":" + conv);
         updataData();
     }
+
     /**
      * 消息漫游完成事件
      *
@@ -216,7 +262,7 @@ public class MessageListFragment extends Fragment {
         this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.e("refresh", "漫游："+conv);
+                Log.e("refresh", "漫游：" + conv);
                 updataData();
             }
         });
@@ -283,10 +329,10 @@ public class MessageListFragment extends Fragment {
     }
 
     private void initDataBean() {
-        list= JMessageClient.getConversationList();
+        list = JMessageClient.getConversationList();
 //        conversation=list.get()
 //        Log.e("Log:会话消息数", list.size()+"");
-        if (list==null||list.size() <= 0) {
+        if (list == null || list.size() <= 0) {
             mFragmentMainNone.setVisibility(View.VISIBLE);
             mFragmentMainRv.setVisibility(View.GONE);
         } else {
@@ -297,9 +343,9 @@ public class MessageListFragment extends Fragment {
                 try {
                     //这里进行撤回消息的判断
 //                    Log.e("type", list.get(i).getTitle()+","+list.get(i).getLatestMessage().getContent().getContentType());
-                    if (list.get(i).getLatestMessage().getContent().getContentType()== ContentType.prompt) {
+                    if (list.get(i).getLatestMessage().getContent().getContentType() == ContentType.prompt) {
                         bean.setContent(((PromptContent) (list.get(i).getLatestMessage()).getContent()).getPromptText());
-                    }else {
+                    } else {
                         bean.setContent(((TextContent) (list.get(i).getLatestMessage()).getContent()).getText());
                     }
                 } catch (Exception e) {
@@ -331,11 +377,15 @@ public class MessageListFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.fragment_main_group})
+    @OnClick({R.id.fragment_main_group, R.id.tv_to_login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fragment_main_group:
 //                startActivity(new Intent(getActivity(), GroupListActivity.class));
+                break;
+
+            case R.id.tv_to_login:
+                startActivity(new Intent(getActivity(), LoginActivity.class));
                 break;
         }
     }

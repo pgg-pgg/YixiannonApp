@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.TypedValue;

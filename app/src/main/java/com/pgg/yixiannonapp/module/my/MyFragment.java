@@ -17,6 +17,7 @@ import com.pgg.yixiannonapp.base.BaseFragment;
 import com.pgg.yixiannonapp.domain.CartGoods;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
+import com.pgg.yixiannonapp.domain.UserStateBean;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
 import com.pgg.yixiannonapp.module.my.activity.EditUserInfoActivity;
@@ -50,51 +51,34 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
     FloatingActionButton fab_edit_view;
     @BindView(R.id.mWaitPayOrderTv)
     TextView mWaitPayOrderTv;
-
     @BindView(R.id.mWaitConfirmOrderTv)
     TextView mWaitConfirmOrderTv;
     @BindView(R.id.mCompleteOrderTv)
     TextView mCompleteOrderTv;
     @BindView(R.id.mEvaluationOrderTv)
     TextView mEvaluationOrderTv;
-
     @BindView(R.id.mAllOrderTv)
     TextView mAllOrderTv;
-
     @BindView(R.id.tv_my_money)
     TextView tv_my_money;
-
     @BindView(R.id.tv_my_bill)
     TextView tv_my_bill;
-
-
     @BindView(R.id.tv_my_coupon)
     TextView tv_my_coupon;
-
-
     @BindView(R.id.tv_my_vip)
     TextView tv_my_vip;
-
-
     @BindView(R.id.tv_my_evaluation)
     TextView tv_my_evaluation;
-
     @BindView(R.id.tv_my_goodsfrom)
     TextView tv_my_goodsfrom;
-
     @BindView(R.id.tv_my_address)
     TextView tv_my_address;
-
-
     @BindView(R.id.tv_my_question)
     TextView tv_my_question;
-
     @BindView(R.id.tv_my_phone)
     TextView tv_my_phone;
-
     @BindView(R.id.tv_my_opinion)
     TextView tv_my_opinion;
-
     @BindView(R.id.tv_my_exit)
     TextView tv_my_exit;
 
@@ -228,8 +212,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                             clearUserInfoInLocal();
                             //退出登录成功之后，通知界面刷新
                             setLoginState(user, false);
+                            EventBus.getDefault().post(UserStateBean.getInstance("0"));
                         }
-
                     }
                 }, user);
 

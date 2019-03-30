@@ -24,6 +24,7 @@ import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseCommonActivity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
+import com.pgg.yixiannonapp.domain.UserStateBean;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.login_register.register.RegisterActivity;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
@@ -148,6 +149,7 @@ public class LoginActivity extends BaseCommonActivity {
                                     updateUserInLocal(results);
                                     results.getData().setUser_state("1");
                                     EventBus.getDefault().post(results.getData());
+                                    EventBus.getDefault().post(UserStateBean.getInstance("1"));
                                     finish();
                                 }else {
                                     loginError("登录成功，请检查网络");
