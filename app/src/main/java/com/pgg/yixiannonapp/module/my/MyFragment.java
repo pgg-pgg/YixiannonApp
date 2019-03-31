@@ -95,8 +95,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
         fab_edit_view.setEnabled(false);
         if ((SPUtils.get(getContext(), Constant.USER_STATE, "0") + "").equals("1")) {
             //用户已登录
-            Glide.with(getContext()).load(Constant.BASE_URL + "image/" + user_name + ".jpg").
-                    placeholder(R.drawable.ocnyang).error(R.drawable.ocnyang)
+            Glide.with(getContext()).load(Constant.BASE_URL + "image/" + user_name + ".jpg")
+                    .error(R.drawable.ocnyang)
                     .centerCrop().into(civ_userhead_me);
             civ_userhead_me.setEnabled(false);
             tv_username_me.setText(TextUtils.isEmpty(user_nick_name) ? "未设置" : user_nick_name);

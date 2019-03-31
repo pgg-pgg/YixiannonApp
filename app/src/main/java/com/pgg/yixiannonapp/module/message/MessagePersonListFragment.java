@@ -126,9 +126,11 @@ public class MessagePersonListFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        adapter.clear();
-        initGetList();
+        if (isLogin){
+            adapter.clear();
+            initGetList();
 //        isFriendStateList(listUserName);
+        }
         super.onResume();
     }
 

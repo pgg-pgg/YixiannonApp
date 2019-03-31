@@ -35,6 +35,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:${appcompat_v7_version}"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:multidex:1.0.3'
@@ -121,8 +122,9 @@ dependencies {
     implementation "cn.jiguang.imui:messagelist:${jigaung_message_list}"
 
     //极光对话输入
-    implementation 'com.github.w446108264:AndroidEmoji:1.3'
-    implementation "cn.jiguang.imui:chatinput:${jiguang_chat_input}"
+    implementation ("cn.jiguang.imui:chatinput:${jiguang_chat_input}"){
+        exclude group: 'com.github.bumptech.glide'
+    }
 
     implementation 'com.bartoszlipinski:recyclerviewheader2:2.0.1'
 

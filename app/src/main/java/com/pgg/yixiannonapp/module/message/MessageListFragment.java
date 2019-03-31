@@ -31,8 +31,10 @@ import com.pgg.yixiannonapp.domain.User;
 import com.pgg.yixiannonapp.domain.UserStateBean;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
+import com.pgg.yixiannonapp.module.message.activity.ChatMsgActivity;
 import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.utils.SharedPrefHelper;
+import com.pgg.yixiannonapp.widget.MyAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -77,14 +79,6 @@ public class MessageListFragment extends Fragment {
     MessageRecyclerAdapter adapter;
     @BindView(R.id.fragment_main_header)
     RecyclerViewHeader mFragmentMainHeader;
-    @BindView(R.id.item_main_img)
-    ImageView mItemMainImg;
-    @BindView(R.id.item_main_username)
-    TextView mItemMainUsername;
-    @BindView(R.id.item_main_content)
-    TextView mItemMainContent;
-    @BindView(R.id.item_main_time)
-    TextView mItemMainTime;
     @BindView(R.id.rl_no_login)
     RelativeLayout rl_no_login;
     @BindView(R.id.tv_to_login)
@@ -146,8 +140,7 @@ public class MessageListFragment extends Fragment {
         }, 2000);
         initRefresh();
         initData();
-        initGroup();
-//        onClickItem();
+        onClickItem();
     }
 
     /*下拉刷新*/
@@ -189,8 +182,9 @@ public class MessageListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        updataData();
-        initGroup();
+        if (isLogin){
+            updataData();
+        }
         super.onResume();
     }
 
@@ -210,7 +204,7 @@ public class MessageListFragment extends Fragment {
         this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                Log.e("Log:新消息", "消息啊" + msg.getContentType().name() + "\n" + msg);
+                Log.e("Log:新消息", "消息啊" + msg.getContentType().name() + "\n" + msg);
 
                 if (JMessageClient.getMyInfo().getUserName() == "1006" || JMessageClient.getMyInfo().getUserName().equals("1006")) {
 
@@ -270,51 +264,51 @@ public class MessageListFragment extends Fragment {
 
 
     /*监听item*/
-//    private void onClickItem() {
-//        adapter.setOnItemClickListener(new MessageRecyclerAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                if (view != null) {
-//                    Intent intent = new Intent(getActivity(), ChatMsgActivity.class);
-//                    intent.putExtra("USERNAME", data.get(position).getUserName());
-//                    intent.putExtra("NAKENAME", data.get(position).getTitle());
-//                    intent.putExtra("MSGID", data.get(position).getMsgID());
-//                    intent.putExtra("position", position);
-////                    intent.putExtra("bean", data.get(position));
-//                    startActivity(intent);
-//                }
-//            }
-//
-//            @Override
-//            public void onItemLongClick(View view, final int position) {
-//                String[] strings = {"删除会话"};
-//                MyAlertDialog dialog = new MyAlertDialog(getActivity(), strings,
-//                        new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                if (i == 0) {
-//                                    JMessageClient.deleteSingleConversation(data.get(position).getUserName());
-//                                    data.remove(position);
-//                                    adapter.notifyDataSetChanged();
-//                                    Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
-//
-//                                }
-//                            }
-//                        });
-//                dialog.initDialog();
-//
-//            }
-//        });
-//    }
+    private void onClickItem() {
+        adapter.setOnItemClickListener(new MessageRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (view != null) {
+                    Intent intent = new Intent(getActivity(), ChatMsgActivity.class);
+                    intent.putExtra("USERNAME", data.get(position).getUserName());
+                    intent.putExtra("NAKENAME", data.get(position).getTitle());
+                    intent.putExtra("MSGID", data.get(position).getMsgID());
+                    intent.putExtra("position", position);
+//                    intent.putExtra("bean", data.get(position));
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, final int position) {
+                String[] strings = {"删除会话"};
+                MyAlertDialog dialog = new MyAlertDialog(getActivity(), strings,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (i == 0) {
+                                    JMessageClient.deleteSingleConversation(data.get(position).getUserName());
+                                    data.remove(position);
+                                    adapter.notifyDataSetChanged();
+                                    Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+                dialog.initDialog();
+
+            }
+        });
+    }
 
     /*群组*/
-    private void initGroup() {
-        mItemMainImg.setImageDrawable(getResources().getDrawable(R.drawable.icon_group));
-        mItemMainUsername.setText("群助手");
-        mItemMainUsername.setTextSize(16);
-        mItemMainContent.setText("[有1个未读消息]");
-        mItemMainContent.setTextColor(Color.parseColor("#E5955D"));
-    }
+//    private void initGroup() {
+//        mItemMainImg.setImageDrawable(getResources().getDrawable(R.drawable.icon_group));
+//        mItemMainUsername.setText("群助手");
+//        mItemMainUsername.setTextSize(16);
+//        mItemMainContent.setText("[有1个未读消息]");
+//        mItemMainContent.setTextColor(Color.parseColor("#E5955D"));
+//    }
 
     private void initData() {
 

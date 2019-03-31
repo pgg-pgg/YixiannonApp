@@ -25,6 +25,7 @@ public interface Constant {
     String HOME_BANNER_FOUR = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1503471047&di=679d7a6c499f59d1b0dcd56b62a9aa6c&imgtype=jpg&er=1&src=http%3A%2F%2Fimg.90sheji.com%2Fdianpu_cover%2F11%2F14%2F64%2F55%2F94ibannercsn_1200.jpg";
 
     String BASE_URL = "http://10.0.2.2:8080/";
+//    String BASE_URL = "http://172.20.10.14:8080/";
 
     String USER_NAGE = "user_name";
     String USER_NICK = "user_nick";

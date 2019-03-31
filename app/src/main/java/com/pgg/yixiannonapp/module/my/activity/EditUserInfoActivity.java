@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,6 +36,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observer;
 
@@ -63,6 +66,7 @@ public class EditUserInfoActivity extends BaseCommonActivity {
     private static String base64;
     private Bitmap mBitmap;
     private int degree;
+    private File file = null;
 
 
 
@@ -133,6 +137,18 @@ public class EditUserInfoActivity extends BaseCommonActivity {
                         svProgressHUD.dismiss();
                         if (userResults.getCode()==0){
                             svProgressHUD.showSuccessWithStatus("更新成功！");
+                            if (file!=null){
+                                JMessageClient.updateUserAvatar(file, new BasicCallback() {
+                                    @Override
+                                    public void gotResult(int i, String s) {
+                                        if (i == 0) {
+                                            Log.e("updateUserAvatar", "更新头像成功");
+                                        } else {
+                                            Log.e("updateUserAvatar", "更新头像失败");
+                                        }
+                                    }
+                                });
+                            }
                             user.setUser_state("1");
                             EventBus.getDefault().post(user);
                             SPUtils.put(getContext(),Constant.USER_SIGN,user.getUser_sign());
@@ -180,7 +196,7 @@ public class EditUserInfoActivity extends BaseCommonActivity {
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             if (data != null && requestCode == 100) {
                 images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                File file = new File(images.get(0).path);
+                file = new File(images.get(0).path);
                 // 从指定路径下读取图片，并获取其EXIF信息
                 ExifInterface exifInterface = null;
                 try {

@@ -81,8 +81,6 @@
                         android:id="@+id/fragment_main_group"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-
-                        <include layout="@layout/item_main_message" />
                     </RelativeLayout>
                 </LinearLayout>
             </com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader>

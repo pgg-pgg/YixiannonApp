@@ -8,6 +8,7 @@ import android.media.ExifInterface;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +88,7 @@ public class RegisterActivity extends BaseCommonActivity {
 
     private ImagePicker imagePicker;
     ArrayList<ImageItem> images = null;
+    private File file = null;
     private static String base64;
     private Bitmap mBitmap;
     private int degree;
@@ -174,6 +176,18 @@ public class RegisterActivity extends BaseCommonActivity {
                     public void onNext(Results<User> results) {
                         if (results.getCode()==0){
                             //注册成功,进行登录操作
+                            if (file!=null){
+                                JMessageClient.updateUserAvatar(file, new BasicCallback() {
+                                    @Override
+                                    public void gotResult(int i, String s) {
+                                        if (i == 0) {
+                                            Log.e("updateUserAvatar", "更新头像成功");
+                                        } else {
+                                            Log.e("updateUserAvatar", "更新头像失败");
+                                        }
+                                    }
+                                });
+                            }
                             initLogin(user_name,user_pwd);
                             finish();
                         }else {
@@ -401,7 +415,7 @@ public class RegisterActivity extends BaseCommonActivity {
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             if (data != null && requestCode == 100) {
                 images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                File file = new File(images.get(0).path);
+                file = new File(images.get(0).path);
                 // 从指定路径下读取图片，并获取其EXIF信息
                 ExifInterface exifInterface = null;
                 try {

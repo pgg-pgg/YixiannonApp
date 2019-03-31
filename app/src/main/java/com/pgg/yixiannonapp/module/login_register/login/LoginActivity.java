@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,10 +171,10 @@ public class LoginActivity extends BaseCommonActivity {
         SPUtils.put(getContext(),Constant.USER_NAGE,results.getData().getUser_name());
         SPUtils.put(getContext(),Constant.USER_NICK,results.getData().getUser_nick_name());
         SPUtils.put(getContext(),Constant.USER_STATE,"1");
-        SPUtils.put(getContext(),Constant.USER_MOBILE,results.getData().getUser_mobile());
-        SPUtils.put(getContext(),Constant.USER_IDENTITY_CARD,results.getData().getUser_identity_card());
-        SPUtils.put(getContext(),Constant.USER_REAL_NAME,results.getData().getUser_real_name());
-        SPUtils.put(getContext(),Constant.USER_SIGN,results.getData().getUser_sign());
+        SPUtils.put(getContext(),Constant.USER_MOBILE,TextUtils.isEmpty(results.getData().getUser_mobile())?"":results.getData().getUser_mobile());
+        SPUtils.put(getContext(),Constant.USER_IDENTITY_CARD,TextUtils.isEmpty(results.getData().getUser_identity_card())?"":results.getData().getUser_identity_card());
+        SPUtils.put(getContext(),Constant.USER_REAL_NAME,TextUtils.isEmpty(results.getData().getUser_real_name())?"":results.getData().getUser_real_name());
+        SPUtils.put(getContext(),Constant.USER_SIGN,TextUtils.isEmpty(results.getData().getUser_sign())?"":results.getData().getUser_sign());
     }
 
 
