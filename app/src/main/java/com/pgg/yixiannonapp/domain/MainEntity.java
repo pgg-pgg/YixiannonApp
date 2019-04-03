@@ -172,7 +172,8 @@ public class MainEntity implements MultiItemEntity {
         private String leftTopImageUrl;
         private String topName;
         private String topDesc;
-        private List<String> goodsUrls;
+        private String goodsUrlLeft;
+        private String goodsUrlRight;
 
         public int getId() {
             return id;
@@ -206,12 +207,20 @@ public class MainEntity implements MultiItemEntity {
             this.topDesc = topDesc;
         }
 
-        public List<String> getGoodsUrls() {
-            return goodsUrls;
+        public String getGoodsUrlLeft() {
+            return goodsUrlLeft;
         }
 
-        public void setGoodsUrls(List<String> goodsUrls) {
-            this.goodsUrls = goodsUrls;
+        public void setGoodsUrlLeft(String goodsUrlLeft) {
+            this.goodsUrlLeft = goodsUrlLeft;
+        }
+
+        public String getGoodsUrlRight() {
+            return goodsUrlRight;
+        }
+
+        public void setGoodsUrlRight(String goodsUrlRight) {
+            this.goodsUrlRight = goodsUrlRight;
         }
     }
 
@@ -223,9 +232,9 @@ public class MainEntity implements MultiItemEntity {
         //商品名称
         private String goodsName;
         //商品价格
-        private float goodsPrice;
+        private String goodsPrice;
         //商品标签 1 多图   2 认证  3 牛商   0代表没有这个标签，不为0则代表有
-        private List<Integer> goodsLabel;
+        private String goodsLabel;
         //商家地址
         private String address;
         //商家名
@@ -267,19 +276,19 @@ public class MainEntity implements MultiItemEntity {
             this.goodsDesc = goodsDesc;
         }
 
-        public float getGoodsPrice() {
+        public String getGoodsPrice() {
             return goodsPrice;
         }
 
-        public void setGoodsPrice(float goodsPrice) {
+        public void setGoodsPrice(String goodsPrice) {
             this.goodsPrice = goodsPrice;
         }
 
-        public List<Integer> getGoodsLabel() {
+        public String getGoodsLabel() {
             return goodsLabel;
         }
 
-        public void setGoodsLabel(List<Integer> goodsLabel) {
+        public void setGoodsLabel(String goodsLabel) {
             this.goodsLabel = goodsLabel;
         }
 

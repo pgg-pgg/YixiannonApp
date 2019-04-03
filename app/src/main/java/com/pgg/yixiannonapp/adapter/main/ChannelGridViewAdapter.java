@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.global.Constant;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class ChannelGridViewAdapter extends BaseAdapter {
         MainEntity.ChannelEntity channelInfoBean = channel_info.get(position);
         holder.tvChannel.setText(channelInfoBean.getChannelName());
         Glide.with(mContext)
-                .load(channelInfoBean.getChannelUrl())
+                .load(Constant.BASE_URL+channelInfoBean.getChannelUrl())
                 .into(holder.ivChannel);
         return convertView;
     }

@@ -1,6 +1,7 @@
 package com.pgg.yixiannonapp.adapter.main;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.utils.GlideUtils;
 
 import java.util.List;
@@ -56,10 +58,10 @@ public class TopNewsGridViewAdapter extends BaseAdapter {
         MainEntity.TopNewsEntity topNewsEntity = topNewsEntityList.get(position);
         holder.tv_goods_name.setText(topNewsEntity.getTopName());
         holder.tv_top_desc.setText(topNewsEntity.getTopDesc());
-        GlideUtils.loadImage(mContext,topNewsEntity.getLeftTopImageUrl(),holder.iv_left_top_view);
-        if (topNewsEntity.getGoodsUrls()!=null&&topNewsEntity.getGoodsUrls().size()>=2){
-            GlideUtils.loadImage(mContext,topNewsEntity.getGoodsUrls().get(0),holder.iv_goods_1);
-            GlideUtils.loadImage(mContext,topNewsEntity.getGoodsUrls().get(1),holder.iv_goods_2);
+        GlideUtils.loadImage(mContext,Constant.BASE_URL+topNewsEntity.getLeftTopImageUrl(),holder.iv_left_top_view);
+        if (!TextUtils.isEmpty(topNewsEntity.getGoodsUrlLeft())&&!TextUtils.isEmpty(topNewsEntity.getGoodsUrlRight())){
+            GlideUtils.loadImage(mContext,Constant.BASE_URL+topNewsEntity.getGoodsUrlLeft(),holder.iv_goods_1);
+            GlideUtils.loadImage(mContext,Constant.BASE_URL+topNewsEntity.getGoodsUrlRight(),holder.iv_goods_2);
         }
         return convertView;
     }

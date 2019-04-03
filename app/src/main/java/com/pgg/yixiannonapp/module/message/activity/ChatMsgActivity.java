@@ -59,10 +59,6 @@ import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static cn.jiguang.imui.commons.models.IMessage.MessageType.RECEIVE_TEXT;
 import static cn.jiguang.imui.commons.models.IMessage.MessageType.SEND_CUSTOM;
 import static cn.jiguang.imui.commons.models.IMessage.MessageType.SEND_FILE;
@@ -128,9 +124,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
     public void initView() {
         this.mManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         editTextHeight();
-//        mChatView.setKeyboardChangedListener(this);
-//        mChatView.setOnSizeChangedListener(this);
-//        mChatView.setOnTouchListener(this);
         helper = SharedPrefHelper.getInstance();
         mContext = ChatMsgActivity.this;
         userInfo = JMessageClient.getMyInfo();
@@ -146,14 +139,11 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
         conversation = conversations.get(position);
         View view = View.inflate(mContext, R.layout.item_receive_photo, null);
         View view1 = View.inflate(mContext, R.layout.item_send_photo, null);
-        imageAvatarSend = (ImageView) view.findViewById(R.id.aurora_iv_msgitem_avatar);
-        imageAvatarReceive = (ImageView) view1.findViewById(R.id.aurora_iv_msgitem_avatar);
-//        MessageBean bean = (MessageBean) getIntent().getSerializableExtra("bean");
-//        Log.e("beanSeriali", bean.getTitle() + "\n"+bean);
+        imageAvatarSend =  view.findViewById(R.id.aurora_iv_msgitem_avatar);
+        imageAvatarReceive =  view1.findViewById(R.id.aurora_iv_msgitem_avatar);
         try {
             imgSend = userInfo.getAvatarFile().toURI().toString();
             imgRecrive = StringUtils.isNull(conversation.getAvatarFile().toURI().toString()) ? "R.drawable.ironman" : conversation.getAvatarFile().toURI().toString();
-
         } catch (Exception e) {
         }
         mData = getMessages();
@@ -183,7 +173,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
                 if (screenHeight - r.bottom > 0) {
                     heightDifference = screenHeight - r.bottom;
                 }
-//                LogUtils.e(heightDifference + "");
             }
         });
     }
@@ -194,6 +183,7 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
             @Override
             public boolean onSendTextMessage(CharSequence charSequence) {
                 sendMessage(charSequence.toString());
+                mChatInput.getInputView().setText("");
                 return false;
             }
 
@@ -452,11 +442,7 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
                                         if (i == 0) {
                                             showToast("撤回了一条消息");
                                             mAdapter.deleteById(message.getMsgId());
-//                                            MyMessage myMessage = new MyMessage("", SEND_TEXT);
-//                                            message.setTimeString("[你撤回了一条消息]");
-//                                            mAdapter.addToStart(message,false);
                                             mAdapter.updateMessage(message);
-//                                            mAdapter.notifyDataSetChanged();
                                         } else {
                                             showToast("撤回失败：" + s);
                                         }

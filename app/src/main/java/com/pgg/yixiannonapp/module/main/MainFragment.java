@@ -5,6 +5,8 @@ import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.adapter.main.MainMultiItemAdapter;
 import com.pgg.yixiannonapp.base.BaseFragment;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.domain.Results;
+import com.pgg.yixiannonapp.net.httpData.HttpData;
 import com.pgg.yixiannonapp.widget.LoadMoreBottomView;
 import com.pgg.yixiannonapp.widget.RefreshHeaderView;
 import com.pgg.yixiannonapp.widget.SearchTextFlipperView;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
+import rx.Observer;
 
 import static butterknife.internal.Utils.listOf;
 import static com.pgg.yixiannonapp.global.Constant.HOME_BANNER_FOUR;
@@ -33,6 +36,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener{
     RecyclerView rv_main_view;
     @BindView(R.id.erl_main_view)
     EasyRefreshLayout erl_main_view;
+
+    ArrayList<MainEntity> mainEntities = new ArrayList<>();
+    MainEntity mainEntity1 = new MainEntity(MainEntity.BANNER_TYPE);
+    MainEntity mainEntity2 = new MainEntity(MainEntity.CHANNEL_TYPE);
+    MainEntity mainEntity3 = new MainEntity(MainEntity.COMMENT_TYPE);
+    MainEntity mainEntity4 = new MainEntity(MainEntity.TOP_TYPE);
+    MainEntity mainEntity5 = new MainEntity(MainEntity.RECOMMEND_TYPE);
 
     @Override
     public void onClick(View view) {
@@ -50,6 +60,39 @@ public class MainFragment extends BaseFragment implements View.OnClickListener{
         initTopTitle();
         //初始化EasyRefresh
         initEasyRefreshLayout();
+        initData();
+    }
+
+    private void initData() {
+        HttpData.getInstance().getHomeData(new Observer<Results<MainEntity>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("pggg======",e.getMessage());
+            }
+
+            @Override
+            public void onNext(Results<MainEntity> mainEntityResults) {
+                if (mainEntityResults.getCode()==0){
+                    mainEntity1.setBannerEntities(mainEntityResults.getData().getBannerEntities());
+                    mainEntity2.setChannelEntities(mainEntityResults.getData().getChannelEntities());
+                    mainEntity3.setCommentEntities(mainEntityResults.getData().getCommentEntities());
+                    mainEntity4.setTopNewsEntities(mainEntityResults.getData().getTopNewsEntities());
+                    mainEntity5.setRecommendEntities(mainEntityResults.getData().getRecommendEntities());
+                    mainEntities.add(mainEntity1);
+                    mainEntities.add(mainEntity2);
+                    mainEntities.add(mainEntity3);
+                    mainEntities.add(mainEntity4);
+                    mainEntities.add(mainEntity5);
+                    rv_main_view.setLayoutManager(new LinearLayoutManager(getContext()));
+                    rv_main_view.setAdapter(new MainMultiItemAdapter(mainEntities));
+                }
+            }
+        });
     }
 
     private void initEasyRefreshLayout() {
@@ -93,82 +136,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener{
      */
     @Override
     public void lazyLoad() {
-        //初始化RecycleView
-        initRecycleView();
-    }
-
-    private void initRecycleView() {
-        rv_main_view.setLayoutManager(new LinearLayoutManager(getContext()));
-        ArrayList<MainEntity> mainEntities = new ArrayList<>();
-        MainEntity mainEntity1 = new MainEntity(MainEntity.BANNER_TYPE);
-        MainEntity mainEntity2 = new MainEntity(MainEntity.CHANNEL_TYPE);
-        MainEntity mainEntity3 = new MainEntity(MainEntity.COMMENT_TYPE);
-        MainEntity mainEntity4 = new MainEntity(MainEntity.TOP_TYPE);
-        MainEntity mainEntity5 = new MainEntity(MainEntity.RECOMMEND_TYPE);
-        List<MainEntity.BannerEntity> bannerEntities = new ArrayList<>();
-        List<MainEntity.ChannelEntity> channelEntities = new ArrayList<>();
-        List<MainEntity.CommentEntity> commentEntities = new ArrayList<>();
-        List<MainEntity.TopNewsEntity> topNewsEntities = new ArrayList<>();
-        List<MainEntity.RecommendEntity> recommendEntities = new ArrayList<>();
-        for (int i=0;i<5;i++){
-            MainEntity.BannerEntity bannerEntity = new MainEntity.BannerEntity();
-            bannerEntity.setId(i);
-            bannerEntities.add(bannerEntity);
-        }
-        mainEntity1.setBannerEntities(bannerEntities);
-        for (int i = 0;i<20;i++){
-            MainEntity.ChannelEntity channelEntity =new MainEntity.ChannelEntity();
-            channelEntity.setId(i);
-            channelEntity.setChannelName("哈哈哈"+i);
-            channelEntity.setChannelUrl(HOME_BANNER_ONE);
-            channelEntities.add(channelEntity);
-        }
-        mainEntity2.setChannelEntities(channelEntities);
-        String text[] = new String[]{
-                "夏日炎炎，来个西瓜清凉一下",
-                "爆款新品狂降价",
-                "新用户立领1000元优惠券"
-        };
-        for (int i = 0;i<3;i++){
-            MainEntity.CommentEntity commentEntity = new MainEntity.CommentEntity();
-            commentEntity.setId(i);
-            commentEntity.setShowText(text[i]);
-            commentEntities.add(commentEntity);
-        }
-        mainEntity3.setCommentEntities(commentEntities);
-
-        for (int i=0;i<8;i++){
-            MainEntity.TopNewsEntity topNewsEntity = new MainEntity.TopNewsEntity();
-            topNewsEntity.setId(i);
-            topNewsEntity.setLeftTopImageUrl(HOME_BANNER_ONE);
-            topNewsEntity.setTopDesc("限时限量抢半价"+i);
-            topNewsEntity.setTopName("农头条"+i);
-            topNewsEntity.setGoodsUrls(listOf(HOME_BANNER_TWO,HOME_BANNER_FOUR));
-            topNewsEntities.add(topNewsEntity);
-        }
-        mainEntity4.setTopNewsEntities(topNewsEntities);
-
-
-        for (int i=0;i<20;i++){
-            MainEntity.RecommendEntity recommendEntity = new MainEntity.RecommendEntity();
-            recommendEntity.setId(i);
-            recommendEntity.setAddress("地址地址地址"+i);
-            recommendEntity.setGoodsDesc("单果重：15～20克以上 20～25克以上 30~35克以上"+i);
-            recommendEntity.setGoodsImageUrl(HOME_BANNER_FOUR);
-            recommendEntity.setGoodsLabel(listOf(1,1,1));
-            recommendEntity.setGoodsName("某某水果"+i);
-            recommendEntity.setGoodsPrice((1+i));
-            recommendEntity.setManName("某某人"+i);
-            recommendEntity.setReleaseTime(i+"分钟");
-            recommendEntities.add(recommendEntity);
-        }
-        mainEntity5.setRecommendEntities(recommendEntities);
-        mainEntities.add(mainEntity1);
-        mainEntities.add(mainEntity2);
-        mainEntities.add(mainEntity3);
-        mainEntities.add(mainEntity4);
-        mainEntities.add(mainEntity5);
-        rv_main_view.setAdapter(new MainMultiItemAdapter(mainEntities));
     }
 
     private void initTopTitle() {

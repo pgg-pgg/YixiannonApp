@@ -18,7 +18,7 @@
             android:id="@+id/iv_left_top_view"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:background="@drawable/arrow"/>
+            android:src="@drawable/arrow"/>
         <TextView
             android:id="@+id/tv_goods_name"
             android:layout_width="wrap_content"
@@ -46,12 +46,12 @@
                 android:text="限时限量抢半价"
                 android:layout_marginBottom="5dp"
                 android:textColor="@color/hint_gray"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="80dp"
-                android:id="@+id/iv_goods_1"
-                android:background="@drawable/corner_indicator_bg"/>
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:background="@drawable/corner_indicator_bg"
+                android:id="@+id/iv_goods_1" />
         </LinearLayout>
 
         <ImageView

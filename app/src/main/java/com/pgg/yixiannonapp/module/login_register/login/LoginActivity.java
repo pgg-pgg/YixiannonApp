@@ -130,6 +130,9 @@ public class LoginActivity extends BaseCommonActivity {
                     case 801004:
                         loginError("密码错误");
                         break;
+                    case 871201:
+                        loginError("网络错误，请检查网络");
+                        break;
                     case 0:
                         HttpData.getInstance().login(new Observer<Results<User>>() {
                             @Override

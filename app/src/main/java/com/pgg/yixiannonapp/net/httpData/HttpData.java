@@ -1,8 +1,10 @@
 package com.pgg.yixiannonapp.net.httpData;
 
+import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
 import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.net.api.MainService;
 import com.pgg.yixiannonapp.net.api.UserService;
 import com.pgg.yixiannonapp.net.retrofit.RetrofitUtils;
 import com.pgg.yixiannonapp.utils.FileUtils;
@@ -37,6 +39,7 @@ public class HttpData {
             .using(CacheProviders.class);
 
     protected UserService userService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(UserService.class);
+    protected MainService mainService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(MainService.class);
 
     private static class SingletonHolder {
         private static final HttpData INSTANCE = new HttpData();
@@ -60,6 +63,11 @@ public class HttpData {
     public void logout(Observer<Results<User>> observable, User user) {
         Observable<Results<User>> dataResults = userService.logout(user);
         setSubscribe(dataResults, observable);
+    }
+
+    public void getHomeData(Observer<Results<MainEntity>> observable){
+        Observable<Results<MainEntity>> homeData = mainService.getHomeData();
+        setSubscribe(homeData, observable);
     }
 
     private static <T> void setSubscribe(Observable<T> listObservable, Observer<T> observable) {

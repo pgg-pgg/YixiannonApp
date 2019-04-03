@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.utils.GlideUtils;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
 import com.pgg.yixiannonapp.widget.SearchTextFlipperView;
@@ -50,10 +51,14 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
             case MainEntity.BANNER_TYPE:
                 List<MainEntity.BannerEntity> bannerEntities = homeEntity.getBannerEntities();
                 if (bannerEntities != null) {
+                    List<String> images = new ArrayList<>();
+                    for(int i = 0;i<bannerEntities.size();i++){
+                        images.add(Constant.BASE_URL+bannerEntities.get(i).getBannerImageUrl());
+                    }
                     Banner mMainBanner = convertView.findViewById(R.id.mMainBanner);
                     mMainBanner.setImageLoader(new BannerImageLoader());
-                    mMainBanner.setImages(listOf(HOME_BANNER_ONE, HOME_BANNER_TWO, HOME_BANNER_THREE, HOME_BANNER_FOUR));
-                    mMainBanner.setBannerAnimation(Transformer.Accordion);
+                    mMainBanner.setImages(images);
+                    mMainBanner.setBannerAnimation(Transformer.CubeIn);
                     mMainBanner.setDelayTime(2000);
                     //设置指示器位置
                     mMainBanner.setIndicatorGravity(BannerConfig.RIGHT);

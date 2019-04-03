@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.utils.GlideUtils;
 
 import java.util.List;
@@ -52,16 +53,17 @@ public class RecommendListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         MainEntity.RecommendEntity recommendEntity = recommendEntities.get(position);
-        List<Integer> goodsLabel = recommendEntity.getGoodsLabel();
-        if (goodsLabel != null && goodsLabel.size() >= 3) {
-            holder.tv_multi_label.setVisibility(goodsLabel.get(0) != 0 ? View.VISIBLE : View.GONE);
-            holder.iv_goods_label1.setVisibility(goodsLabel.get(1)!=0?View.VISIBLE:View.GONE);
-            holder.iv_goods_label2.setVisibility(goodsLabel.get(2)!=0?View.VISIBLE:View.GONE);
+        String goodsLabels = recommendEntity.getGoodsLabel();
+        String[] goodsLabel = goodsLabels.split(",");
+        if (goodsLabel != null && goodsLabel.length >= 3) {
+            holder.tv_multi_label.setVisibility(!goodsLabel[0].equals("0") ? View.VISIBLE : View.GONE);
+            holder.iv_goods_label1.setVisibility(!goodsLabel[1].equals("0") ? View.VISIBLE : View.GONE);
+            holder.iv_goods_label2.setVisibility(!goodsLabel[2].equals("0") ? View.VISIBLE : View.GONE);
         }
-        GlideUtils.loadUrlImage(context,recommendEntity.getGoodsImageUrl(),holder.iv_recommend_goods);
+        GlideUtils.loadUrlImage(context, Constant.BASE_URL+recommendEntity.getGoodsImageUrl(), holder.iv_recommend_goods);
         holder.tv_recommend_desc.setText(recommendEntity.getGoodsDesc());
         holder.tv_recommend_goods_view.setText(recommendEntity.getGoodsName());
-        holder.tv_recommend_price.setText(recommendEntity.getGoodsPrice()+" 元/斤");
+        holder.tv_recommend_price.setText(recommendEntity.getGoodsPrice() + " 元/斤");
         holder.tv_recommend_address.setText(recommendEntity.getAddress());
         holder.tv_recommend_man_name.setText(recommendEntity.getManName());
         holder.tv_recommend_time.setText(recommendEntity.getReleaseTime());

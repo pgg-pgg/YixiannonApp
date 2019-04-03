@@ -59,7 +59,7 @@
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_recommend_goods_view"
-                    android:background="@drawable/news_from_shape"
+                    android:src="@drawable/icon_label_auth"
                     android:layout_marginLeft="5dp"/>
 
                 <ImageView
@@ -68,7 +68,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/news_from_shape"
+                    android:src="@drawable/icon_label_baoyou"
                     android:layout_toRightOf="@id/iv_goods_label1"
                     android:layout_marginLeft="5dp"/>
 
