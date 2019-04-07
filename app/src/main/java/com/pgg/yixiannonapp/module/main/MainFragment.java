@@ -1,17 +1,15 @@
 package com.pgg.yixiannonapp.module.main;
 
-import com.ajguan.library.EasyRefreshLayout;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kennyc.view.MultiStateView;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.adapter.main.MainMultiItemAdapter;
 import com.pgg.yixiannonapp.base.BaseFragment;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
-import com.pgg.yixiannonapp.widget.LoadMoreBottomView;
-import com.pgg.yixiannonapp.widget.RefreshHeaderView;
 import com.pgg.yixiannonapp.widget.SearchTextFlipperView;
 
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,22 +18,20 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import rx.Observer;
 
-import static butterknife.internal.Utils.listOf;
-import static com.pgg.yixiannonapp.global.Constant.HOME_BANNER_FOUR;
-import static com.pgg.yixiannonapp.global.Constant.HOME_BANNER_ONE;
-import static com.pgg.yixiannonapp.global.Constant.HOME_BANNER_TWO;
-
-public class MainFragment extends BaseFragment implements View.OnClickListener{
+public class MainFragment extends BaseFragment{
 
     @BindView(R.id.ll_main_search)
     SearchTextFlipperView ll_main_search;
     @BindView(R.id.rv_main_view)
     RecyclerView rv_main_view;
-    @BindView(R.id.erl_main_view)
-    EasyRefreshLayout erl_main_view;
+    @BindView(R.id.mMultiStateView)
+    MultiStateView mMultiStateView;
+    private int curPage = 0;
+    private int pageNum = 5;
 
     ArrayList<MainEntity> mainEntities = new ArrayList<>();
     MainEntity mainEntity1 = new MainEntity(MainEntity.BANNER_TYPE);
@@ -44,11 +40,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener{
     MainEntity mainEntity4 = new MainEntity(MainEntity.TOP_TYPE);
     MainEntity mainEntity5 = new MainEntity(MainEntity.RECOMMEND_TYPE);
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
+    MainMultiItemAdapter mainMultiItemAdapter;
     @Override
     public int getLayoutRes() {
         return R.layout.fragment_main;
@@ -58,26 +50,27 @@ public class MainFragment extends BaseFragment implements View.OnClickListener{
     public void initView() {
         //初始化顶部搜索栏
         initTopTitle();
-        //初始化EasyRefresh
-        initEasyRefreshLayout();
         initData();
     }
 
     private void initData() {
+        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
         HttpData.getInstance().getHomeData(new Observer<Results<MainEntity>>() {
             @Override
             public void onCompleted() {
-
+                initRefreshLayout();
             }
 
             @Override
             public void onError(Throwable e) {
+                mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                 Log.e("pggg======",e.getMessage());
             }
 
             @Override
             public void onNext(Results<MainEntity> mainEntityResults) {
                 if (mainEntityResults.getCode()==0){
+                    mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                     mainEntity1.setBannerEntities(mainEntityResults.getData().getBannerEntities());
                     mainEntity2.setChannelEntities(mainEntityResults.getData().getChannelEntities());
                     mainEntity3.setCommentEntities(mainEntityResults.getData().getCommentEntities());
@@ -89,44 +82,56 @@ public class MainFragment extends BaseFragment implements View.OnClickListener{
                     mainEntities.add(mainEntity4);
                     mainEntities.add(mainEntity5);
                     rv_main_view.setLayoutManager(new LinearLayoutManager(getContext()));
-                    rv_main_view.setAdapter(new MainMultiItemAdapter(mainEntities));
+                    mainMultiItemAdapter = new MainMultiItemAdapter(mainEntities);
+                    mainMultiItemAdapter.openLoadAnimation();
+                    rv_main_view.setAdapter(mainMultiItemAdapter);
+                    curPage+=pageNum;
+                }else {
+                    mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                 }
             }
-        });
+        },curPage,pageNum);
     }
 
-    private void initEasyRefreshLayout() {
-        erl_main_view.setRefreshHeadView(new RefreshHeaderView(getContext()));
-        erl_main_view.setLoadMoreView(new LoadMoreBottomView(getContext()));
-        erl_main_view.setEnableLoadMore(false);
-        erl_main_view.addEasyEvent(new EasyRefreshLayout.EasyEvent() {
-            //上拉加载更多
+    private void initRefreshLayout() {
+        mainMultiItemAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
-            public void onLoadMore() {
-                new Handler().postDelayed(new Runnable() {
+            public void onLoadMoreRequested() {
+                HttpData.getInstance().getRecommendData(new Observer<Results<List<MainEntity.RecommendEntity>>>() {
                     @Override
-                    public void run() {
-                        erl_main_view.loadMoreComplete(new EasyRefreshLayout.Event() {
-                            @Override
-                            public void complete() {
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mainMultiItemAdapter.loadMoreFail();
+                    }
+
+                    @Override
+                    public void onNext(Results<List<MainEntity.RecommendEntity>> recommendEntityResults) {
+                        List<MainEntity.RecommendEntity> data = recommendEntityResults.getData();
+                        if (recommendEntityResults.getCode()==0){
+                            if (data.size()<0){
+                                //数据获取失败
+                                mainMultiItemAdapter.loadMoreFail();
+                                return;
                             }
-                        }, 500);
+                            if (data.size()<pageNum){
+                                //数据全部加载完毕
+                                mainMultiItemAdapter.loadMoreEnd();
+                            }else {
+                                List<MainEntity.RecommendEntity> recommendEntities = mainEntity5.getRecommendEntities();
+                                recommendEntities.addAll(data);
+                                mainEntity5.setRecommendEntities(recommendEntities);
+                                mainMultiItemAdapter.notifyItemChanged(4);
+                                mainMultiItemAdapter.loadMoreComplete();
+                                curPage+=pageNum;
+                            }
+                        }
 
                     }
-                }, 2000);
-
-            }
-
-            //下拉刷新
-            @Override
-            public void onRefreshing() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        erl_main_view.refreshComplete();
-                        Toast.makeText(getContext(), "refresh success", Toast.LENGTH_SHORT).show();
-                    }
-                }, 1000);
+                },curPage,pageNum);
             }
         });
     }
@@ -136,6 +141,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener{
      */
     @Override
     public void lazyLoad() {
+//        initRefreshLayout();
     }
 
     private void initTopTitle() {

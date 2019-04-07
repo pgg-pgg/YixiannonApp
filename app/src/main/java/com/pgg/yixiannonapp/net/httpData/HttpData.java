@@ -1,18 +1,20 @@
 package com.pgg.yixiannonapp.net.httpData;
 
+import com.pgg.yixiannonapp.domain.Classify.ClassifyItemEntity;
+import com.pgg.yixiannonapp.domain.Classify.ClassifyTypeEntity;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
 import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.net.api.ClassifyService;
 import com.pgg.yixiannonapp.net.api.MainService;
 import com.pgg.yixiannonapp.net.api.UserService;
 import com.pgg.yixiannonapp.net.retrofit.RetrofitUtils;
 import com.pgg.yixiannonapp.utils.FileUtils;
 
 import java.io.File;
+import java.util.List;
 
-import io.rx_cache.DynamicKey;
-import io.rx_cache.EvictDynamicKey;
 import io.rx_cache.Reply;
 import io.rx_cache.internal.RxCache;
 import rx.Observable;
@@ -40,6 +42,7 @@ public class HttpData {
 
     protected UserService userService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(UserService.class);
     protected MainService mainService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(MainService.class);
+    protected ClassifyService classifyService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(ClassifyService.class);
 
     private static class SingletonHolder {
         private static final HttpData INSTANCE = new HttpData();
@@ -65,10 +68,26 @@ public class HttpData {
         setSubscribe(dataResults, observable);
     }
 
-    public void getHomeData(Observer<Results<MainEntity>> observable){
-        Observable<Results<MainEntity>> homeData = mainService.getHomeData();
+    public void getHomeData(Observer<Results<MainEntity>> observable,int curPage,int pageNum){
+        Observable<Results<MainEntity>> homeData = mainService.getHomeData(curPage,pageNum);
         setSubscribe(homeData, observable);
     }
+
+    public void getRecommendData(Observer<Results<List<MainEntity.RecommendEntity>>> observable, int curPage, int pageNum){
+        Observable<Results<List<MainEntity.RecommendEntity>>> homeData = mainService.getRecommendData(curPage,pageNum);
+        setSubscribe(homeData, observable);
+    }
+
+    public void getAllClassifyData(Observer<Results<List<ClassifyTypeEntity>>> observable){
+        Observable<Results<List<ClassifyTypeEntity>>> homeData = classifyService.getAllClassifyData();
+        setSubscribe(homeData, observable);
+    }
+
+    public void getClassifyItemEntities(Observer<Results<List<ClassifyItemEntity>>> observable,int classifyDescId){
+        Observable<Results<List<ClassifyItemEntity>>> classifyData = classifyService.getClassifyItemEntities(classifyDescId);
+        setSubscribe(classifyData, observable);
+    }
+
 
     private static <T> void setSubscribe(Observable<T> listObservable, Observer<T> observable) {
         listObservable.observeOn(AndroidSchedulers.mainThread())

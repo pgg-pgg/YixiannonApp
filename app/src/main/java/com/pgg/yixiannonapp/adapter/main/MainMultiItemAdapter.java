@@ -33,6 +33,8 @@ import static com.pgg.yixiannonapp.global.Constant.HOME_BANNER_TWO;
 
 public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, BaseViewHolder> {
 
+    public RecommendListAdapter recommendListAdapter;
+
     public MainMultiItemAdapter(List<MainEntity> data) {
         super(data);
         addItemType(MainEntity.BANNER_TYPE, R.layout.layout_main_banner);
@@ -40,6 +42,11 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
         addItemType(MainEntity.COMMENT_TYPE, R.layout.layout_news_flipper);
         addItemType(MainEntity.TOP_TYPE, R.layout.layout_top_news);
         addItemType(MainEntity.RECOMMEND_TYPE, R.layout.layout_recommend_view);
+    }
+
+    @Override
+    public void setData(int index, MainEntity data) {
+        super.setData(index, data);
     }
 
     @Override
@@ -58,7 +65,7 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
                     Banner mMainBanner = convertView.findViewById(R.id.mMainBanner);
                     mMainBanner.setImageLoader(new BannerImageLoader());
                     mMainBanner.setImages(images);
-                    mMainBanner.setBannerAnimation(Transformer.CubeIn);
+                    mMainBanner.setBannerAnimation(Transformer.RotateDown);
                     mMainBanner.setDelayTime(2000);
                     //设置指示器位置
                     mMainBanner.setIndicatorGravity(BannerConfig.RIGHT);

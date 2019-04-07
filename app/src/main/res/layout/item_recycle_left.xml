@@ -22,6 +22,6 @@
         android:layout_height="match_parent"
         android:text="新鲜水果"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:gravity="center"/>
 </LinearLayout>

@@ -27,6 +27,11 @@ public class RecommendListAdapter extends BaseAdapter {
         this.recommendEntities = recommendEntities;
     }
 
+    public void flushData(List<MainEntity.RecommendEntity> recommendEntities){
+        this.recommendEntities = recommendEntities;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return recommendEntities.size();

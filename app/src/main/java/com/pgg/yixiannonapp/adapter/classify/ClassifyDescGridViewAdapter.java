@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.pgg.yixiannonapp.R;
-import com.pgg.yixiannonapp.domain.ClassifyTypeEntity;
+import com.pgg.yixiannonapp.domain.Classify.ClassifyTypeEntity;
+import com.pgg.yixiannonapp.domain.Classify.GoodsTypeEntity;
+import com.pgg.yixiannonapp.global.Constant;
 
 import java.util.List;
 
@@ -19,9 +21,9 @@ import butterknife.ButterKnife;
 
 public class ClassifyDescGridViewAdapter extends BaseAdapter {
     private Context mContext;
-    private List<ClassifyTypeEntity.GoodsTypeEntity> goodsTypeEntities;
+    private List<GoodsTypeEntity> goodsTypeEntities;
 
-    public ClassifyDescGridViewAdapter(Context mContext, List<ClassifyTypeEntity.GoodsTypeEntity> goodsTypeEntities) {
+    public ClassifyDescGridViewAdapter(Context mContext, List<GoodsTypeEntity> goodsTypeEntities) {
         this.mContext = mContext;
         this.goodsTypeEntities = goodsTypeEntities;
     }
@@ -54,10 +56,10 @@ public class ClassifyDescGridViewAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        ClassifyTypeEntity.GoodsTypeEntity goodsTypeEntity = goodsTypeEntities.get(position);
+        GoodsTypeEntity goodsTypeEntity = goodsTypeEntities.get(position);
         holder.tvChannel.setText(goodsTypeEntity.getGoodsName());
         Glide.with(mContext)
-                .load(goodsTypeEntity.getGoodsImageUrl())
+                .load(Constant.BASE_URL+goodsTypeEntity.getGoodsImageUrl())
                 .into(holder.ivChannel);
         return convertView;
     }

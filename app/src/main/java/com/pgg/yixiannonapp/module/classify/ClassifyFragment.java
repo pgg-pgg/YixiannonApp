@@ -6,48 +6,67 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.kennyc.view.MultiStateView;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.adapter.classify.ClassifyRecycleLeftAdapter;
 import com.pgg.yixiannonapp.adapter.classify.ClassifyRecycleRightAdapter;
 import com.pgg.yixiannonapp.base.BaseFragment;
-import com.pgg.yixiannonapp.domain.ClassifyTypeEntity;
+import com.pgg.yixiannonapp.domain.Classify.ClassifyItemEntity;
+import com.pgg.yixiannonapp.domain.Classify.ClassifyTypeEntity;
+import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.net.httpData.HttpData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import rx.Observer;
 
-public class ClassifyFragment extends BaseFragment implements View.OnClickListener {
+public class ClassifyFragment extends BaseFragment {
 
     @BindView(R.id.rv_classify_left)
     RecyclerView rv_classify_left;
     @BindView(R.id.rv_classify_right)
     RecyclerView rv_classify_right;
+    @BindView(R.id.mMultiStateView1)
+    MultiStateView mMultiStateView1;
+    @BindView(R.id.mMultiStateView2)
+    MultiStateView mMultiStateView2;
 
-    private int currentCheckItem=0;
+    private int currentCheckItem = 0;
 
     List<ClassifyTypeEntity> classifyTypeEntities;
 
     @Override
-    public void onClick(View view) {
-
-    }
-
-    @Override
     public void lazyLoad() {
-        initLeftRecycleView();
-        initRightRecycleView();
-
     }
 
     //初始化左半部recycle
     private void initLeftRecycleView() {
-
         rv_classify_left.setLayoutManager(new LinearLayoutManager(getContext()));
         final ClassifyRecycleLeftAdapter classifyRecycleLeftAdapter = new ClassifyRecycleLeftAdapter(R.layout.item_recycle_left, classifyTypeEntities);
         rv_classify_left.setAdapter(classifyRecycleLeftAdapter);
         rv_classify_left.addOnItemTouchListener(new OnItemChildClickListener() {
+            @Override
+            public void onSimpleItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (currentCheckItem != position) {
+                    ((ClassifyTypeEntity) adapter.getItem(currentCheckItem)).setIsSelected(false);
+                    ((ClassifyTypeEntity) adapter.getItem(position)).setIsSelected(true);
+                    adapter.notifyDataSetChanged();
+                    currentCheckItem = position;
+                    getClassifyItemEntities(position+1);
+                }
+            }
+        });
+    }
+
+
+    private void initRightRecycleView(List<ClassifyItemEntity> data) {
+        rv_classify_right.setLayoutManager(new LinearLayoutManager(getContext()));
+        ClassifyRecycleRightAdapter classifyRecycleLeftAdapter = new ClassifyRecycleRightAdapter(R.layout.item_classify_right, data);
+        rv_classify_right.setAdapter(classifyRecycleLeftAdapter);
+        rv_classify_right.addOnItemTouchListener(new OnItemChildClickListener() {
             @Override
             public void onSimpleItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (currentCheckItem!=position){
@@ -61,25 +80,6 @@ public class ClassifyFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-    private void initRightRecycleView() {
-        rv_classify_right.setLayoutManager(new LinearLayoutManager(getContext()));
-        ClassifyRecycleRightAdapter classifyRecycleLeftAdapter = new ClassifyRecycleRightAdapter(R.layout.item_classify_right, classifyTypeEntities.get(0).getClassifyDescEntities());
-        rv_classify_right.setAdapter(classifyRecycleLeftAdapter);
-//        rv_classify_right.addOnItemTouchListener(new OnItemChildClickListener() {
-//            @Override
-//            public void onSimpleItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//                if (currentCheckItem!=position){
-//                    ((ClassifyTypeEntity)adapter.getItem(currentCheckItem)).setIsSelected(false);
-//                    ((ClassifyTypeEntity)adapter.getItem(position)).setIsSelected(true);
-//                    adapter.notifyDataSetChanged();
-//                    currentCheckItem = position;
-//                }
-//            }
-//        });
-    }
-
-
-
     @Override
     public int getLayoutRes() {
         return R.layout.fragment_classify;
@@ -87,35 +87,55 @@ public class ClassifyFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void initView() {
+        mMultiStateView1.setViewState(MultiStateView.VIEW_STATE_LOADING);
         classifyTypeEntities = new ArrayList<>();
-        List<ClassifyTypeEntity.ClassifyDescEntity> classifyDescEntities=new ArrayList<>();
-        List<ClassifyTypeEntity.GoodsTypeEntity> goodsTypeEntities=new ArrayList<>();
-
-        for (int i = 0;i<9;i++){
-            ClassifyTypeEntity.GoodsTypeEntity goodsTypeEntity = new ClassifyTypeEntity.GoodsTypeEntity();
-            goodsTypeEntity.setId(i);
-            goodsTypeEntity.setGoodsImageUrl(Constant.HOME_BANNER_ONE);
-            goodsTypeEntity.setGoodsName("商品"+i);
-            goodsTypeEntities.add(goodsTypeEntity);
-        }
-
-        for (int i=0;i<4;i++){
-            ClassifyTypeEntity.ClassifyDescEntity descEntity = new ClassifyTypeEntity.ClassifyDescEntity();
-            descEntity.setId(i);
-            descEntity.setTypeName("推荐分类"+i);
-            descEntity.setGoodsTypeEntities(goodsTypeEntities);
-            classifyDescEntities.add(descEntity);
-        }
-        for(int i=0;i<20;i++){
-            ClassifyTypeEntity entity = new ClassifyTypeEntity();
-            if (i==0){
-                entity.setIsSelected(true);
+        HttpData.getInstance().getAllClassifyData(new Observer<Results<List<ClassifyTypeEntity>>>() {
+            @Override
+            public void onCompleted() {
+                mMultiStateView1.setViewState(MultiStateView.VIEW_STATE_CONTENT);
             }
-            entity.setId(i);
-            entity.setTypeName("新鲜水果"+i);
-            entity.setClassifyDescEntities(classifyDescEntities);
-            classifyTypeEntities.add(entity);
-        }
+
+            @Override
+            public void onError(Throwable e) {
+                mMultiStateView1.setViewState(MultiStateView.VIEW_STATE_ERROR);
+            }
+
+            @Override
+            public void onNext(Results<List<ClassifyTypeEntity>> listResults) {
+                if (listResults.getCode() == 0) {
+                    //获取所有分类数据
+                    classifyTypeEntities = listResults.getData();
+                    classifyTypeEntities.get(0).setIsSelected(true);
+                    mMultiStateView1.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+                    initLeftRecycleView();
+                }
+            }
+        });
+        getClassifyItemEntities(1);
+    }
+
+    private void getClassifyItemEntities(int classifyTypeId) {
+        mMultiStateView2.setViewState(MultiStateView.VIEW_STATE_LOADING);
+        HttpData.getInstance().getClassifyItemEntities(new Observer<Results<List<ClassifyItemEntity>>>() {
+            @Override
+            public void onCompleted() {
+                mMultiStateView2.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mMultiStateView2.setViewState(MultiStateView.VIEW_STATE_ERROR);
+            }
+
+            @Override
+            public void onNext(Results<List<ClassifyItemEntity>> listResults) {
+                if (listResults.getCode()==0){
+                    List<ClassifyItemEntity> data = listResults.getData();
+                    mMultiStateView2.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+                    initRightRecycleView(data);
+                }
+            }
+        }, classifyTypeId);
     }
 
     @Override
