@@ -57,4 +57,9 @@
     <string name="my_exit">退出登录</string>
 
 
+    <string name="sldinglayout_bg_power_info">author site: www.pgg-pgg.com</string>
+    <string name="sldinglayout_bg_developer_info">©2015 - 2018  Developed by pgg-pgg</string>
+    <string name="recommend">推荐</string>
+
+
 </resources>

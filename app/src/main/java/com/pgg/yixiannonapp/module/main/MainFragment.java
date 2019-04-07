@@ -13,9 +13,6 @@ import com.pgg.yixiannonapp.widget.SearchTextFlipperView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,7 +138,6 @@ public class MainFragment extends BaseFragment{
      */
     @Override
     public void lazyLoad() {
-//        initRefreshLayout();
     }
 
     private void initTopTitle() {

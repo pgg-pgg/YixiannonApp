@@ -36,4 +36,8 @@ public interface Constant {
     String USER_REAL_NAME = "user_real_name";
     String USER_IDENTITY_CARD = "user_identity_card";
 
+
+    String CLICK_URL = "clickUrl";
+    String CLICK_TITLE = "mTitle";
+
 }

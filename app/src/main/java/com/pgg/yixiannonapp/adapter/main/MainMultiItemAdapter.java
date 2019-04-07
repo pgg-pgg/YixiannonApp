@@ -1,6 +1,8 @@
 package com.pgg.yixiannonapp.adapter.main;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.module.WebSafeActivity;
 import com.pgg.yixiannonapp.utils.GlideUtils;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
 import com.pgg.yixiannonapp.widget.SearchTextFlipperView;
@@ -19,6 +22,7 @@ import com.pgg.yixiannonapp.widget.TopTitleView;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
 import java.util.ArrayList;
@@ -56,7 +60,7 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
         switch (homeEntity.getItemType()) {
             //顶部轮播图
             case MainEntity.BANNER_TYPE:
-                List<MainEntity.BannerEntity> bannerEntities = homeEntity.getBannerEntities();
+                final List<MainEntity.BannerEntity> bannerEntities = homeEntity.getBannerEntities();
                 if (bannerEntities != null) {
                     List<String> images = new ArrayList<>();
                     for(int i = 0;i<bannerEntities.size();i++){
@@ -71,6 +75,14 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
                     mMainBanner.setIndicatorGravity(BannerConfig.RIGHT);
                     //banner全部设置完毕后调用
                     mMainBanner.start();
+                    mMainBanner.setOnBannerListener(new OnBannerListener() {
+                        @Override
+                        public void OnBannerClick(int position) {
+                            Intent intent = new Intent(mContext,WebSafeActivity.class);
+                            intent.putExtra(Constant.CLICK_URL,bannerEntities.get(position).getClickUrl());
+                            mContext.startActivity(intent);
+                        }
+                    });
                 }
             case MainEntity.CHANNEL_TYPE:
                 //频道

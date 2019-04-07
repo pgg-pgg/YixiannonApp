@@ -10,7 +10,9 @@ import android.widget.Toast;
 
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.MainActivity;
+import com.pgg.yixiannonapp.module.WebSafeActivity;
 import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
 
@@ -77,9 +79,9 @@ public class ChannelViewPagerAdapter extends PagerAdapter {
         gv_channel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Todo:频道的点击事件
-                Toast.makeText(context,mChannelEntities.get(position).get(i).getChannelName(),Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context,GoodsDetailActivity.class);
+                Intent intent = new Intent(context,WebSafeActivity.class);
+                intent.putExtra(Constant.CLICK_URL,mChannelEntities.get(position).get(i).getClickUrl());
+                intent.putExtra(Constant.CLICK_TITLE,mChannelEntities.get(position).get(i).getChannelName());
                 context.startActivity(intent);
             }
         });

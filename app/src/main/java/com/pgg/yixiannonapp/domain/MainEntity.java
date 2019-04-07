@@ -109,6 +109,7 @@ public class MainEntity implements MultiItemEntity {
         private int id;
         private String channelUrl;
         private String channelName;
+        private String clickUrl;
 
         public int getId() {
             return id;
@@ -132,6 +133,14 @@ public class MainEntity implements MultiItemEntity {
 
         public void setChannelName(String channelName) {
             this.channelName = channelName;
+        }
+
+        public String getClickUrl() {
+            return clickUrl;
+        }
+
+        public void setClickUrl(String clickUrl) {
+            this.clickUrl = clickUrl;
         }
     }
 
