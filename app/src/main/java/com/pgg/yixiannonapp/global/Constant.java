@@ -40,4 +40,6 @@ public interface Constant {
     String CLICK_URL = "clickUrl";
     String CLICK_TITLE = "mTitle";
 
+    String GOODS_TITLE = "goods_title";
+
 }

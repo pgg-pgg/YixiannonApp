@@ -1,6 +1,5 @@
 package com.pgg.yixiannonapp.module.goods_detail.fragment;
 
-import android.view.LayoutInflater;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -15,16 +14,18 @@ public class GoodsInfoWebFragment extends BaseFragment {
     @BindView(R.id.wv_detail)
     public WebView wv_detail;
     private WebSettings webSettings;
-    private LayoutInflater inflater;
+    String url=null;
 
     @Override
     public int getLayoutRes() {
         return R.layout.fragment_item_info_web;
     }
 
+    public void setUrlData(String url){
+        this.url = url;
+    }
     @Override
     public void initView() {
-        String url = "http://m.okhqb.com/item/description/1000334264.html?fromApp=true";
         wv_detail.setFocusable(false);
         wv_detail.loadUrl(url);
         webSettings = wv_detail.getSettings();
@@ -53,7 +54,6 @@ public class GoodsInfoWebFragment extends BaseFragment {
 
     @Override
     protected void managerArguments() {
-
     }
 
     @Override

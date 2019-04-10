@@ -1,5 +1,6 @@
 package com.pgg.yixiannonapp.module.goods_detail.fragment;
 
+import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,10 +8,12 @@ import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseFragment;
+import com.pgg.yixiannonapp.domain.MainEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,30 +24,37 @@ import butterknife.OnClick;
 public class GoodsDetailFragment extends BaseFragment {
 
     @BindView(R.id.ll_goods_detail)
-    LinearLayout ll_goods_detail;
+    RelativeLayout ll_goods_detail;
     @BindView(R.id.ll_goods_config)
-    LinearLayout ll_goods_config;
+    RelativeLayout ll_goods_config;
     @BindView(R.id.tv_goods_detail)
     TextView tv_goods_detail;
     @BindView(R.id.tv_goods_config)
     TextView tv_goods_config;
     @BindView(R.id.fl_content)
     FrameLayout fl_content;
-    @BindView(R.id.v_tab_cursor)
-    View v_tab_cursor;
+    @BindView(R.id.view_line_config)
+    View view_line_config;
+    @BindView(R.id.view_line_detail)
+    View view_line_detail;
 
     private int nowIndex;
     private float fromX;
     private List<TextView> tabTextList;
     private GoodsConfigFragment goodsConfigFragment;
-    private GoodsDetailWebFragment goodsDetailWebFragment;
+    private GoodsInfoWebFragment goodsDetailWebFragment;
     private Fragment nowFragment;
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
+    private MainEntity.RecommendEntity recommendEntity;
 
     @Override
     public int getLayoutRes() {
         return R.layout.fragment_goods_detail;
+    }
+
+    public void setGoodsDetail(MainEntity.RecommendEntity recommendEntity){
+        this.recommendEntity = recommendEntity;
     }
 
     @Override
@@ -58,9 +68,11 @@ public class GoodsDetailFragment extends BaseFragment {
     /**
      * 商品信息Fragment页获取完数据执行
      */
-    public void setData() {
+    private void setData() {
         goodsConfigFragment = new GoodsConfigFragment();
-        goodsDetailWebFragment = new GoodsDetailWebFragment();
+        goodsDetailWebFragment = new GoodsInfoWebFragment();
+        goodsConfigFragment.setData(recommendEntity);
+        goodsDetailWebFragment.setUrlData(recommendEntity.getGoodsDetails());
 
         nowFragment = goodsDetailWebFragment;
         fragmentManager = getChildFragmentManager();
@@ -76,6 +88,8 @@ public class GoodsDetailFragment extends BaseFragment {
                 switchFragment(nowFragment, goodsDetailWebFragment);
                 nowIndex = 0;
                 nowFragment = goodsDetailWebFragment;
+                view_line_config.setVisibility(View.INVISIBLE);
+                view_line_detail.setVisibility(View.VISIBLE);
                 scrollCursor();
                 break;
 
@@ -84,6 +98,8 @@ public class GoodsDetailFragment extends BaseFragment {
                 switchFragment(nowFragment, goodsConfigFragment);
                 nowIndex = 1;
                 nowFragment = goodsConfigFragment;
+                view_line_config.setVisibility(View.VISIBLE);
+                view_line_detail.setVisibility(View.INVISIBLE);
                 scrollCursor();
                 break;
 
@@ -96,16 +112,9 @@ public class GoodsDetailFragment extends BaseFragment {
      * 滑动游标
      */
     private void scrollCursor() {
-        TranslateAnimation anim = new TranslateAnimation(fromX, nowIndex * v_tab_cursor.getWidth(), 0, 0);
-        anim.setFillAfter(true);//设置动画结束时停在动画结束的位置
-        anim.setDuration(50);
-        //保存动画结束时游标的位置,作为下次滑动的起点
-        fromX = nowIndex * v_tab_cursor.getWidth();
-        v_tab_cursor.startAnimation(anim);
-
         //设置Tab切换颜色
         for (int i = 0; i < tabTextList.size(); i++) {
-            tabTextList.get(i).setTextColor(i == nowIndex ? getResources().getColor(R.color.text_red) : getResources().getColor(R.color.text_black));
+            tabTextList.get(i).setTextColor(i == nowIndex ? getResources().getColor(R.color.colorAccent) : getResources().getColor(R.color.text_black));
         }
     }
 

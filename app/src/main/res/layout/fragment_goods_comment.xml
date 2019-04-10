@@ -79,19 +79,31 @@
         android:alpha="0.4"
         android:background="#dddddd" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_empty_comment"
         android:layout_width="match_parent"
-        android:layout_height="123dp"
+        android:layout_height="match_parent"
         android:background="#ffffff"
-        android:gravity="center"
         android:visibility="visible">
 
         <TextView
+            android:id="@+id/tv_none_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="暂无评论"
+            android:layout_centerInParent="true"
             android:textColor="#888888"
             android:textSize="13dp" />
-    </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_comments"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:listSelector="@android:color/transparent"
+            android:divider="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 </LinearLayout>

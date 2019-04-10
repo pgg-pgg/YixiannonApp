@@ -7,6 +7,7 @@ import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.net.api.ClassifyService;
+import com.pgg.yixiannonapp.net.api.GoodsDetailService;
 import com.pgg.yixiannonapp.net.api.MainService;
 import com.pgg.yixiannonapp.net.api.UserService;
 import com.pgg.yixiannonapp.net.retrofit.RetrofitUtils;
@@ -43,6 +44,7 @@ public class HttpData {
     protected UserService userService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(UserService.class);
     protected MainService mainService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(MainService.class);
     protected ClassifyService classifyService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(ClassifyService.class);
+    protected GoodsDetailService goodsDetailService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(GoodsDetailService.class);
 
     private static class SingletonHolder {
         private static final HttpData INSTANCE = new HttpData();
@@ -85,6 +87,11 @@ public class HttpData {
 
     public void getClassifyItemEntities(Observer<Results<List<ClassifyItemEntity>>> observable,int classifyDescId){
         Observable<Results<List<ClassifyItemEntity>>> classifyData = classifyService.getClassifyItemEntities(classifyDescId);
+        setSubscribe(classifyData, observable);
+    }
+
+    public void getGoodsDetail(Observer<Results<MainEntity.RecommendEntity>> observable, String goodsName){
+        Observable<Results<MainEntity.RecommendEntity>> classifyData = goodsDetailService.getGoodsDetail(goodsName);
         setSubscribe(classifyData, observable);
     }
 

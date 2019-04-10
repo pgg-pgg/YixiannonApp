@@ -1,16 +1,19 @@
 package com.pgg.yixiannonapp.module.goods_detail.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -18,23 +21,27 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.gxz.PagerSlidingTabStrip;
 import com.pgg.yixiannonapp.R;
+import com.pgg.yixiannonapp.adapter.goods_detail.ItemCommentsAdapter;
 import com.pgg.yixiannonapp.adapter.goods_detail.ItemRecommendAdapter;
-import com.pgg.yixiannonapp.adapter.goods_detail.NetworkImageHolderView;
 import com.pgg.yixiannonapp.base.BaseFragment;
-import com.pgg.yixiannonapp.domain.RecommendGoodsBean;
-import com.pgg.yixiannonapp.module.MainActivity;
+import com.pgg.yixiannonapp.domain.Comments;
+import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
+import com.pgg.yixiannonapp.utils.GlideUtils;
 import com.pgg.yixiannonapp.widget.SlideDetailsLayout;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
+import com.youth.banner.loader.ImageLoader;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.OnClick;
 
-public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayout.OnSlideDetailsListener{
+public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayout.OnSlideDetailsListener {
 
     private PagerSlidingTabStrip psts_tabs;
     @BindView(R.id.sv_switch)
@@ -44,25 +51,21 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
     @BindView(R.id.fab_up_slide)
     FloatingActionButton fab_up_slide;
     @BindView(R.id.vp_item_goods_img)
-    ConvenientBanner vp_item_goods_img;
-    @BindView(R.id.vp_recommend)
-    ConvenientBanner vp_recommend;
+    Banner vp_item_goods_img;
     @BindView(R.id.ll_goods_detail)
-    LinearLayout ll_goods_detail;
+    RelativeLayout ll_goods_detail;
     @BindView(R.id.ll_goods_config)
-    LinearLayout ll_goods_config;
+    RelativeLayout ll_goods_config;
     @BindView(R.id.tv_goods_detail)
     TextView tv_goods_detail;
     @BindView(R.id.tv_goods_config)
     TextView tv_goods_config;
-    @BindView(R.id.v_tab_cursor)
-    View v_tab_cursor;
     @BindView(R.id.fl_content)
     FrameLayout fl_content;
     @BindView(R.id.ll_current_goods)
     LinearLayout ll_current_goods;
     @BindView(R.id.ll_activity)
-    LinearLayout  ll_activity;
+    LinearLayout ll_activity;
     @BindView(R.id.ll_comment)
     LinearLayout ll_comment;
     @BindView(R.id.ll_recommend)
@@ -71,6 +74,12 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
     LinearLayout ll_pull_up;
     @BindView(R.id.tv_goods_title)
     TextView tv_goods_title;
+    @BindView(R.id.tv_goods_address)
+    TextView tv_goods_address;
+    @BindView(R.id.tv_goods_man_name)
+    TextView tv_goods_man_name;
+    @BindView(R.id.tv_goods_desc)
+    TextView tv_goods_desc;
     @BindView(R.id.tv_new_price)
     TextView tv_new_price;
     @BindView(R.id.tv_old_price)
@@ -81,10 +90,25 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
     TextView tv_comment_count;
     @BindView(R.id.tv_good_comment)
     TextView tv_good_comment;
+    @BindView(R.id.lv_comments)
+    ListView lv_comments;
+    @BindView(R.id.tv_label_1)
+    TextView tv_label_1;
+    @BindView(R.id.tv_label_2)
+    TextView tv_label_2;
+    @BindView(R.id.tv_none_comments)
+    TextView tv_none_comments;
+    @BindView(R.id.vp_recommend)
+    ConvenientBanner vp_recommend;
+    @BindView(R.id.view_line_config)
+    View view_line_config;
+    @BindView(R.id.view_line_detail)
+    View view_line_detail;
 
-    /** 当前商品详情数据页的索引分别是图文详情、规格参数 */
+    /**
+     * 当前商品详情数据页的索引分别是图文详情、规格参数
+     */
     private int nowIndex;
-    private float fromX;
     public GoodsConfigFragment goodsConfigFragment;
     public GoodsInfoWebFragment goodsInfoWebFragment;
     private Fragment nowFragment;
@@ -93,7 +117,7 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
     public GoodsDetailActivity activity;
-    private LayoutInflater inflater;
+    private MainEntity.RecommendEntity data;
 
     @Override
     public void onAttach(Context context) {
@@ -101,60 +125,96 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
         activity = (GoodsDetailActivity) context;
     }
 
-    // 开始自动翻页
-    @Override
-    public void onResume() {
-        super.onResume();
-        //开始自动翻页
-        vp_item_goods_img.startTurning(4000);
-    }
-    // 停止自动翻页
-    @Override
-    public void onPause() {
-        super.onPause();
-        //停止翻页
-        vp_item_goods_img.stopTurning();
-    }
-
     @Override
     public int getLayoutRes() {
         return R.layout.fragment_goods_info;
     }
 
-    @Override
-    public void initView() {
-        initData();
-        setDetailData();
-        setLoopView();
-        setRecommendGoods();
-
-        //设置文字中间一条横线
-        tv_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        fab_up_slide.hide();
-
-        //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
-        vp_item_goods_img.setPageIndicator(new int[]{R.drawable.index_white, R.drawable.index_red});
-        vp_item_goods_img.setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
-        vp_recommend.setPageIndicator(new int[]{R.drawable.shape_item_index_white, R.drawable.shape_item_index_red});
-        vp_recommend.setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
+    public void setData(MainEntity.RecommendEntity data) {
+        this.data = data;
     }
 
-    private void initData() {
+    @Override
+    public void initView() {
         fragmentList = new ArrayList<>();
         tabTextList = new ArrayList<>();
         tabTextList.add(tv_goods_detail);
         tabTextList.add(tv_goods_config);
+        initData(data);
+        //设置文字中间一条横线
+        tv_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        fab_up_slide.hide();
+    }
+
+    private void initData(MainEntity.RecommendEntity data) {
+        List<MainEntity.RecommendEntity> recommendEntities = data.getRecommends();
+        String banner = data.getGoodsBannerUrl();
+        String[] split = banner.split(",");
+        //初始化banner
+        initBanner(split);
+        //初始化商品信息
+        initTopInfo(data);
+        //初始化小农推荐
+        initRecommendGoods(recommendEntities);
+        initDetailData(data);
+    }
+
+    private void initTopInfo(MainEntity.RecommendEntity data) {
+        tv_goods_title.setText(data.getGoodsName());
+        tv_goods_address.setText(data.getAddress());
+        tv_goods_man_name.setText(data.getManName());
+        tv_goods_desc.setText(data.getGoodsDesc());
+        tv_new_price.setText(data.getGoodsPrice());
+        tv_old_price.setText("¥" + data.getGoodsOldPrice());
+        String goodsLabel = data.getGoodsLabel();
+        String[] goodsLabelArray = goodsLabel.split(",");
+        if (goodsLabelArray != null && goodsLabelArray.length >= 3) {
+            tv_label_1.setVisibility(!goodsLabelArray[1].equals("0") ? View.VISIBLE : View.GONE);
+            tv_label_2.setVisibility(!goodsLabelArray[2].equals("0") ? View.VISIBLE : View.GONE);
+        }
+        List<Comments> comments = data.getComments();
+        int startNums = 0;
+        for (int i = 0; i < comments.size(); i++) {
+            startNums += comments.get(i).getRatingStar();
+        }
+        float percent = (float) startNums / (5 * comments.size());
+        tv_comment_count.setText("(" + comments.size() + ")");
+        tv_good_comment.setText((percent * 100) + "%");
+        if (comments.size()>0){
+            tv_none_comments.setVisibility(View.GONE);
+            lv_comments.setVisibility(View.VISIBLE);
+            lv_comments.setAdapter(new ItemCommentsAdapter(getContext(), data.getComments()));
+        }
+    }
+
+    private void initBanner(String[] split) {
+        List<String> images = new ArrayList<>();
+        for (int i = 0; i < split.length; i++) {
+            images.add(Constant.BASE_URL + split[i]);
+        }
+        vp_item_goods_img.setImages(images);
+        vp_item_goods_img.setImageLoader(new BannerImageLoader());
+        vp_item_goods_img.setImages(images);
+        vp_item_goods_img.setBannerAnimation(Transformer.RotateDown);
+        vp_item_goods_img.setDelayTime(2000);
+        //设置指示器位置
+        vp_item_goods_img.setIndicatorGravity(BannerConfig.CENTER);
+        //banner全部设置完毕后调用
+        vp_item_goods_img.start();
     }
 
     /**
      * 加载完商品详情执行
+     *
+     * @param data
      */
-    public void setDetailData() {
+    public void initDetailData(MainEntity.RecommendEntity data) {
         goodsConfigFragment = new GoodsConfigFragment();
+        goodsConfigFragment.setData(data);
         goodsInfoWebFragment = new GoodsInfoWebFragment();
+        goodsInfoWebFragment.setUrlData(data.getGoodsDetails());
         fragmentList.add(goodsConfigFragment);
         fragmentList.add(goodsInfoWebFragment);
-
         nowFragment = goodsInfoWebFragment;
         fragmentManager = getChildFragmentManager();
         //默认显示商品详情tab
@@ -163,18 +223,11 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
 
     /**
      * 设置推荐商品
+     *
+     * @param recommendEntities
      */
-    public void setRecommendGoods() {
-        List<RecommendGoodsBean> data = new ArrayList<>();
-        data.add(new RecommendGoodsBean("Letv/乐视 LETV体感-超级枪王 乐视TV超级电视产品玩具 体感游戏枪 电玩道具 黑色",
-                "http://img4.hqbcdn.com/product/79/f3/79f3ef1b0b2283def1f01e12f21606d4.jpg", new BigDecimal(599), "799"));
-        data.add(new RecommendGoodsBean("IPEGA/艾派格 幽灵之子 无线蓝牙游戏枪 游戏体感枪 苹果安卓智能游戏手柄 标配",
-                "http://img2.hqbcdn.com/product/00/76/0076cedb0a7d728ec1c8ec149cff0d16.jpg", new BigDecimal(299), "399"));
-        data.add(new RecommendGoodsBean("Letv/乐视 LETV体感-超级枪王 乐视TV超级电视产品玩具 体感游戏枪 电玩道具 黑色",
-                "http://img4.hqbcdn.com/product/79/f3/79f3ef1b0b2283def1f01e12f21606d4.jpg", new BigDecimal(599), "799"));
-        data.add(new RecommendGoodsBean("IPEGA/艾派格 幽灵之子 无线蓝牙游戏枪 游戏体感枪 苹果安卓智能游戏手柄 标配",
-                "http://img2.hqbcdn.com/product/00/76/0076cedb0a7d728ec1c8ec149cff0d16.jpg", new BigDecimal(299), "399"));
-        List<List<RecommendGoodsBean>> handledData = handleRecommendGoods(data);
+    public void initRecommendGoods(List<MainEntity.RecommendEntity> recommendEntities) {
+        List<List<MainEntity.RecommendEntity>> handledData = handleRecommendGoods(recommendEntities);
         //设置如果只有一组数据时不能滑动
         vp_recommend.setManualPageable(handledData.size() == 1 ? false : true);
         vp_recommend.setCanLoop(handledData.size() == 1 ? false : true);
@@ -184,11 +237,14 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
                 return new ItemRecommendAdapter();
             }
         }, handledData);
+        //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+        vp_recommend.setPageIndicator(new int[]{R.drawable.shape_item_index_white, R.drawable.shape_item_index_red});
+        vp_recommend.setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
     }
 
-    @OnClick({R.id.fab_up_slide,R.id.ll_current_goods,R.id.ll_activity,
-            R.id.ll_comment,R.id.ll_pull_up,R.id.ll_goods_detail,R.id.ll_goods_config})
-    public void onClick(View view){
+    @OnClick({R.id.fab_up_slide, R.id.ll_current_goods, R.id.ll_activity,
+            R.id.ll_comment, R.id.ll_pull_up, R.id.ll_goods_detail, R.id.ll_goods_config})
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_pull_up:
                 //上拉查看图文详情
@@ -205,6 +261,8 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
                 //商品详情tab
                 nowIndex = 0;
                 scrollCursor();
+                view_line_config.setVisibility(View.INVISIBLE);
+                view_line_detail.setVisibility(View.VISIBLE);
                 switchFragment(nowFragment, goodsInfoWebFragment);
                 nowFragment = goodsInfoWebFragment;
                 break;
@@ -213,6 +271,8 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
                 //规格参数tab
                 nowIndex = 1;
                 scrollCursor();
+                view_line_config.setVisibility(View.VISIBLE);
+                view_line_detail.setVisibility(View.INVISIBLE);
                 switchFragment(nowFragment, goodsConfigFragment);
                 nowFragment = goodsConfigFragment;
                 break;
@@ -220,26 +280,6 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
             default:
                 break;
         }
-    }
-
-
-    /**
-     * 给商品轮播图设置图片路径
-     */
-    public void setLoopView() {
-        List<String> imgUrls = new ArrayList<>();
-        imgUrls.add("http://img4.hqbcdn.com/product/79/f3/79f3ef1b0b2283def1f01e12f21606d4.jpg");
-        imgUrls.add("http://img14.hqbcdn.com/product/77/6c/776c63e6098f05fdc5639adc96d8d6ea.jpg");
-        imgUrls.add("http://img13.hqbcdn.com/product/41/ca/41cad5139371e4eb1ce095e5f6224f4d.jpg");
-        imgUrls.add("http://img10.hqbcdn.com/product/fa/ab/faab98caca326949b87b770c8080e6cf.jpg");
-        imgUrls.add("http://img2.hqbcdn.com/product/6b/b8/6bb86086397a8cd0525c449f29abfaff.jpg");
-        //初始化商品图片轮播
-        vp_item_goods_img.setPages(new CBViewHolderCreator() {
-            @Override
-            public Object createHolder() {
-                return new NetworkImageHolderView();
-            }
-        }, imgUrls);
     }
 
     @Override
@@ -263,22 +303,16 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
      * 滑动游标
      */
     private void scrollCursor() {
-        TranslateAnimation anim = new TranslateAnimation(fromX, nowIndex * v_tab_cursor.getWidth(), 0, 0);
-        anim.setFillAfter(true);//设置动画结束时停在动画结束的位置
-        anim.setDuration(50);
-        //保存动画结束时游标的位置,作为下次滑动的起点
-        fromX = nowIndex * v_tab_cursor.getWidth();
-        v_tab_cursor.startAnimation(anim);
-
         //设置Tab切换颜色
         for (int i = 0; i < tabTextList.size(); i++) {
-            tabTextList.get(i).setTextColor(i == nowIndex ? getResources().getColor(R.color.text_red) : getResources().getColor(R.color.text_black));
+            tabTextList.get(i).setTextColor(i == nowIndex ? getResources().getColor(R.color.colorAccent) : getResources().getColor(R.color.text_black));
         }
     }
 
     /**
      * 切换Fragment
      * <p>(hide、show、add)
+     *
      * @param fromFragment
      * @param toFragment
      */
@@ -310,19 +344,26 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
      * @param data
      * @return
      */
-    public static List<List<RecommendGoodsBean>> handleRecommendGoods(List<RecommendGoodsBean> data) {
-        List<List<RecommendGoodsBean>> handleData = new ArrayList<>();
+    public static List<List<MainEntity.RecommendEntity>> handleRecommendGoods(List<MainEntity.RecommendEntity> data) {
+        List<List<MainEntity.RecommendEntity>> handleData = new ArrayList<>();
         int length = data.size() / 2;
         if (data.size() % 2 != 0) {
             length = data.size() / 2 + 1;
         }
         for (int i = 0; i < length; i++) {
-            List<RecommendGoodsBean> recommendGoods = new ArrayList<>();
+            List<MainEntity.RecommendEntity> recommendGoods = new ArrayList<>();
             for (int j = 0; j < (i * 2 + j == data.size() ? 1 : 2); j++) {
                 recommendGoods.add(data.get(i * 2 + j));
             }
             handleData.add(recommendGoods);
         }
         return handleData;
+    }
+
+    private class BannerImageLoader extends ImageLoader {
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            GlideUtils.loadUrlImage(context, path.toString(), imageView);
+        }
     }
 }

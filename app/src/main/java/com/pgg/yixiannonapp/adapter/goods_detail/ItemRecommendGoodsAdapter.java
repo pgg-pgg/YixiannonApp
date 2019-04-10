@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pgg.yixiannonapp.R;
-import com.pgg.yixiannonapp.domain.RecommendGoodsBean;
+import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.global.Constant;
 
 import java.util.List;
 
@@ -21,25 +22,25 @@ import java.util.List;
 public class ItemRecommendGoodsAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
-    private List<RecommendGoodsBean> data;
+    private List<MainEntity.RecommendEntity> data;
 
-    public ItemRecommendGoodsAdapter(Context context, List<RecommendGoodsBean> data) {
+    public ItemRecommendGoodsAdapter(Context context, List<MainEntity.RecommendEntity> data) {
         this.context = context;
         this.data = data;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setData(List<RecommendGoodsBean> data) {
+    public void setData(List<MainEntity.RecommendEntity> data) {
         this.data = data;
         notifyDataSetChanged();
     }
 
-    public void addData(List<RecommendGoodsBean> data) {
+    public void addData(List<MainEntity.RecommendEntity> data) {
         this.data.addAll(data);
         notifyDataSetChanged();
     }
 
-    public List<RecommendGoodsBean> getData() {
+    public List<MainEntity.RecommendEntity> getData() {
         return this.data;
     }
 
@@ -74,11 +75,11 @@ public class ItemRecommendGoodsAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        RecommendGoodsBean recommendGoods = data.get(position);
-        holder.tv_goods_name.setText(recommendGoods.getTitle());
-        holder.tv_goods_price.setText("￥" + recommendGoods.getCurrentPrice());
-        holder.sdv_goods.setImageURI(Uri.parse(recommendGoods.getImag()));
-        holder.tv_goods_old_price.setText("￥" + recommendGoods.getPrice());
+        MainEntity.RecommendEntity recommendGoods = data.get(position);
+        holder.tv_goods_name.setText(recommendGoods.getGoodsName());
+        holder.tv_goods_price.setText("￥" + recommendGoods.getGoodsPrice());
+        holder.sdv_goods.setImageURI(Uri.parse(Constant.BASE_URL+recommendGoods.getGoodsImageUrl()));
+        holder.tv_goods_old_price.setText("￥" + recommendGoods.getGoodsOldPrice());
         return convertView;
     }
 
@@ -87,10 +88,10 @@ public class ItemRecommendGoodsAdapter extends BaseAdapter {
         private TextView tv_goods_name, tv_goods_price, tv_goods_old_price;
 
         public ViewHolder(View convertView) {
-            sdv_goods = (SimpleDraweeView) convertView.findViewById(R.id.sdv_goods);
-            tv_goods_name = (TextView) convertView.findViewById(R.id.tv_goods_name);
-            tv_goods_price = (TextView) convertView.findViewById(R.id.tv_goods_price);
-            tv_goods_old_price = (TextView) convertView.findViewById(R.id.tv_goods_old_price);
+            sdv_goods = convertView.findViewById(R.id.sdv_goods);
+            tv_goods_name = convertView.findViewById(R.id.tv_goods_name);
+            tv_goods_price = convertView.findViewById(R.id.tv_goods_price);
+            tv_goods_old_price = convertView.findViewById(R.id.tv_goods_old_price);
             tv_goods_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
     }

@@ -15,6 +15,7 @@ import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.WebSafeActivity;
+import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
 import com.pgg.yixiannonapp.utils.GlideUtils;
 import com.pgg.yixiannonapp.widget.GridViewChannelView;
 import com.pgg.yixiannonapp.widget.SearchTextFlipperView;
@@ -135,7 +136,7 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
                 }
             case MainEntity.TOP_TYPE:
                 //农头条
-                List<MainEntity.TopNewsEntity> topNewsEntities = homeEntity.getTopNewsEntities();
+                final List<MainEntity.TopNewsEntity> topNewsEntities = homeEntity.getTopNewsEntities();
                 if (topNewsEntities != null) {
                     TopTitleView ttv_news_view = convertView.findViewById(R.id.ttv_news_view);
                     GridViewChannelView gr_top_news = convertView.findViewById(R.id.gr_top_news);
@@ -151,14 +152,16 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
                     gr_top_news.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(convertView.getContext(), position + "", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(mContext,GoodsDetailActivity.class);
+                            intent.putExtra(Constant.GOODS_TITLE,topNewsEntities.get(position).getTopName());
+                            mContext.startActivity(intent);
                         }
                     });
                 }
 
             case MainEntity.RECOMMEND_TYPE:
                 //为您推荐
-                List<MainEntity.RecommendEntity> recommendEntities = homeEntity.getRecommendEntities();
+                final List<MainEntity.RecommendEntity> recommendEntities = homeEntity.getRecommendEntities();
                 if (recommendEntities!=null){
                     TopTitleView ttv_news_view = convertView.findViewById(R.id.ttv_recommend_view);
                     ttv_news_view.setTopTitleName(TopTitleView.RECOMMEND_TYPE);
@@ -173,8 +176,9 @@ public class MainMultiItemAdapter extends BaseMultiItemQuickAdapter<MainEntity, 
                     lv_recommend_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            //todo:推荐商品
-                            Toast.makeText(convertView.getContext(), position + "", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(mContext,GoodsDetailActivity.class);
+                            intent.putExtra(Constant.GOODS_TITLE,recommendEntities.get(position).getGoodsName());
+                            mContext.startActivity(intent);
                         }
                     });
                 }

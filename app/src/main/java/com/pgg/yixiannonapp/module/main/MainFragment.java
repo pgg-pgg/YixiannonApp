@@ -61,7 +61,6 @@ public class MainFragment extends BaseFragment{
             @Override
             public void onError(Throwable e) {
                 mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                Log.e("pggg======",e.getMessage());
             }
 
             @Override

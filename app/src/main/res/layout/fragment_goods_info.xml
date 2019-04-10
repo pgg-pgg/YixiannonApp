@@ -27,19 +27,11 @@
                     android:background="#eeeff3"
                     android:orientation="vertical">
 
-                    <FrameLayout
+                    <com.youth.banner.Banner
+                        android:id="@+id/vp_item_goods_img"
                         android:layout_width="match_parent"
-                        android:layout_height="203dp"
-                        android:background="@color/white">
-
-                        <!-- 自动轮播的第三方控件 -->
-                        <com.bigkoo.convenientbanner.ConvenientBanner xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/vp_item_goods_img"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="#ffffff"
-                            app:canLoop="true" />
-                    </FrameLayout>
+                        android:layout_height="200dp"
+                        android:background="@color/white" />
 
                     <View
                         android:layout_width="match_parent"
@@ -55,22 +47,62 @@
                         android:paddingLeft="12dp"
                         android:paddingTop="15dp">
 
-                        <TextView
-                            android:id="@+id/tv_goods_title"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="22dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="Letv/乐视LETV体感-超级枪王 乐视TV超级电视产品玩具体感游戏枪 电玩道具黑色"
-                            android:textColor="#222222"
-                            android:textSize="15sp" />
+                            android:orientation="vertical"
+                            android:paddingRight="10dp">
+
+                            <TextView
+                                android:id="@+id/tv_goods_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:text="星蓝花"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true">
+
+                                <TextView
+                                    android:id="@+id/tv_goods_address"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="山西蜂县"
+                                    android:textColor="@color/hint_gray"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_goods_man_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_toRightOf="@id/tv_goods_address"
+                                    android:text="山楂树果经纪人"
+                                    android:textColor="@color/hint_gray"
+                                    android:textSize="14sp" />
+
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/tv_goods_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginRight="10dp"
+                                android:ellipsize="end"
+                                android:singleLine="true"
+                                android:text="单果重：15～20克以上 20～25克以上 30~35克以上" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="14dp"
-                            android:layout_marginTop="15dp"
                             android:gravity="bottom"
                             android:minHeight="25dp"
                             android:orientation="horizontal"
@@ -135,10 +167,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:paddingBottom="15dp"
                         android:paddingLeft="12dp"
+                        android:paddingTop="15dp"
                         android:paddingRight="12dp"
-                        android:paddingTop="15dp">
+                        android:paddingBottom="15dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -171,16 +203,34 @@
                         android:background="#dddddd" />
 
                     <!-- 商品保障图 -->
-                    <ImageView
-                        android:id="@+id/iv_ensure"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="10dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:background="#ffffff"
-                        android:src="@drawable/item_goods_ensure" />
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:id="@+id/tv_label_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="12dp"
+                            android:drawableLeft="@drawable/icon_label_auth"
+                            android:drawablePadding="5dp"
+                            android:text="认证" />
+
+                        <TextView
+                            android:id="@+id/tv_label_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="12dp"
+                            android:drawableLeft="@drawable/icon_label_baoyou"
+                            android:drawablePadding="5dp"
+                            android:text="包邮" />
+                    </LinearLayout>
                     <!-- 用户点评 -->
                     <View
                         android:layout_width="match_parent"
@@ -258,7 +308,7 @@
                         android:alpha="0.4"
                         android:background="#dddddd" />
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/ll_empty_comment"
                         android:layout_width="match_parent"
                         android:layout_height="123dp"
@@ -267,12 +317,24 @@
                         android:visibility="visible">
 
                         <TextView
+                            android:id="@+id/tv_none_comments"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
                             android:text="暂无精华评论"
                             android:textColor="#888888"
                             android:textSize="13dp" />
-                    </LinearLayout>
+
+                        <ListView
+                            android:id="@+id/lv_comments"
+                            android:scrollbars="none"
+                            android:overScrollMode="never"
+                            android:listSelector="@android:color/transparent"
+                            android:divider="@null"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="gone" />
+                    </RelativeLayout>
 
                     <!-- 小二推荐 -->
                     <LinearLayout
@@ -288,9 +350,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="14dp"
                             android:layout_marginTop="14dp"
-                            android:text="小二推荐"
+                            android:layout_marginBottom="14dp"
+                            android:text="小农推荐"
                             android:textColor="#222222"
                             android:textSize="13dp" />
 
@@ -343,5 +405,10 @@
             app:borderWidth="0dp"
             app:fabSize="mini"
             app:rippleColor="#ffffff" />
+
+
     </android.support.design.widget.CoordinatorLayout>
+    <!--</com.kennyc.view.MultiStateView>-->
+
+
 </LinearLayout>

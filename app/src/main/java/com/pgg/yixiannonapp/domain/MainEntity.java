@@ -238,10 +238,14 @@ public class MainEntity implements MultiItemEntity {
         private int id;
         //商品图片url
         private String goodsImageUrl;
+        //商品轮播图
+        private String goodsBannerUrl;
         //商品名称
         private String goodsName;
         //商品价格
         private String goodsPrice;
+        //商品原价
+        private String goodsOldPrice;
         //商品标签 1 多图   2 认证  3 牛商   0代表没有这个标签，不为0则代表有
         private String goodsLabel;
         //商家地址
@@ -250,8 +254,14 @@ public class MainEntity implements MultiItemEntity {
         private String manName;
         //发布时间
         private String releaseTime;
-
+        //商品描述
         private String goodsDesc;
+
+        //用户点评
+        private List<Comments> comments;
+        private List<RecommendEntity> recommends;
+        private String goodsDetails;
+
 
         public int getId() {
             return id;
@@ -323,6 +333,46 @@ public class MainEntity implements MultiItemEntity {
 
         public void setReleaseTime(String releaseTime) {
             this.releaseTime = releaseTime;
+        }
+
+        public String getGoodsBannerUrl() {
+            return goodsBannerUrl;
+        }
+
+        public void setGoodsBannerUrl(String goodsBannerUrl) {
+            this.goodsBannerUrl = goodsBannerUrl;
+        }
+
+        public String getGoodsOldPrice() {
+            return goodsOldPrice;
+        }
+
+        public void setGoodsOldPrice(String goodsOldPrice) {
+            this.goodsOldPrice = goodsOldPrice;
+        }
+
+        public List<Comments> getComments() {
+            return comments;
+        }
+
+        public void setComments(List<Comments> comments) {
+            this.comments = comments;
+        }
+
+        public List<RecommendEntity> getRecommends() {
+            return recommends;
+        }
+
+        public void setRecommends(List<RecommendEntity> recommends) {
+            this.recommends = recommends;
+        }
+
+        public String getGoodsDetails() {
+            return goodsDetails;
+        }
+
+        public void setGoodsDetails(String goodsDetails) {
+            this.goodsDetails = goodsDetails;
         }
     }
 

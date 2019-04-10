@@ -133,4 +133,6 @@ dependencies {
 
     implementation 'com.bigkoo:svprogresshud:1.0.6'
 
+    implementation 'com.github.everhad:AndroidRatingStar:v1.0.4'
+
 }
