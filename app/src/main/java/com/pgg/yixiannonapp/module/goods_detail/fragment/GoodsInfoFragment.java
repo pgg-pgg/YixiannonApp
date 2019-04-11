@@ -1,18 +1,20 @@
 package com.pgg.yixiannonapp.module.goods_detail.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -25,10 +27,12 @@ import com.pgg.yixiannonapp.adapter.goods_detail.ItemCommentsAdapter;
 import com.pgg.yixiannonapp.adapter.goods_detail.ItemRecommendAdapter;
 import com.pgg.yixiannonapp.base.BaseFragment;
 import com.pgg.yixiannonapp.domain.Comments;
+import com.pgg.yixiannonapp.domain.GoodsDetail.GoodsSku;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
 import com.pgg.yixiannonapp.utils.GlideUtils;
+import com.pgg.yixiannonapp.widget.GoodsSkuPopup;
 import com.pgg.yixiannonapp.widget.SlideDetailsLayout;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -104,6 +108,9 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
     View view_line_config;
     @BindView(R.id.view_line_detail)
     View view_line_detail;
+    private GoodsSkuPopup mSkuPop;
+    private Animation mAnimationEnd, mAnimationStart;
+    private View contentView;
 
     /**
      * 当前商品详情数据页的索引分别是图文详情、规格参数
@@ -140,10 +147,13 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
         tabTextList = new ArrayList<>();
         tabTextList.add(tv_goods_detail);
         tabTextList.add(tv_goods_config);
+        contentView = getActivity().findViewById(android.R.id.content);
+        initAnim();
         initData(data);
         //设置文字中间一条横线
         tv_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         fab_up_slide.hide();
+
     }
 
     private void initData(MainEntity.RecommendEntity data) {
@@ -157,6 +167,51 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
         //初始化小农推荐
         initRecommendGoods(recommendEntities);
         initDetailData(data);
+        initSkuPop();
+        loadPopData(data);
+    }
+
+    /**
+     * 初始化弹窗的动画
+     */
+    private void initAnim() {
+        //弹窗出现动画
+        mAnimationStart = new ScaleAnimation(1f, 0.95f, 1f, 0.95f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        mAnimationStart.setDuration(500);
+        mAnimationStart.setFillAfter(true);
+
+        //弹窗消失动画
+        mAnimationEnd = new ScaleAnimation(0.95f, 1f, 0.95f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        mAnimationEnd.setDuration(500);
+        mAnimationEnd.setFillAfter(true);
+    }
+
+    private void initSkuPop() {
+        mSkuPop = new GoodsSkuPopup(getActivity());
+        mSkuPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                contentView.startAnimation(mAnimationEnd);
+            }
+        });
+    }
+
+    /**
+     * 加载SKU数据
+     *
+     * @param data
+     */
+    private void loadPopData(MainEntity.RecommendEntity data) {
+        String defaultSku = "";
+        for (GoodsSku goodsSku : data.getGoodsSkus()) {
+            defaultSku += goodsSku.getSkuContent().get(0) + ",";
+        }
+        defaultSku = defaultSku.substring(0,defaultSku.length()-1);
+        tv_current_goods.setText(defaultSku);
+        mSkuPop.setGoodsIcon(Constant.BASE_URL + data.getGoodsImageUrl());
+        mSkuPop.setGoodsCode(data.getId() + "");
+        mSkuPop.setmGoodsPrice(data.getGoodsPrice() + "元/斤");
+        mSkuPop.setSkuData(data.getGoodsSkus());
     }
 
     private void initTopInfo(MainEntity.RecommendEntity data) {
@@ -180,7 +235,7 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
         float percent = (float) startNums / (5 * comments.size());
         tv_comment_count.setText("(" + comments.size() + ")");
         tv_good_comment.setText((percent * 100) + "%");
-        if (comments.size()>0){
+        if (comments.size() > 0) {
             tv_none_comments.setVisibility(View.GONE);
             lv_comments.setVisibility(View.VISIBLE);
             lv_comments.setAdapter(new ItemCommentsAdapter(getContext(), data.getComments()));
@@ -276,7 +331,10 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
                 switchFragment(nowFragment, goodsConfigFragment);
                 nowFragment = goodsConfigFragment;
                 break;
-
+            case R.id.ll_current_goods:
+                mSkuPop.showAtLocation(contentView, Gravity.BOTTOM & Gravity.CENTER_HORIZONTAL, 0, 0);
+                contentView.startAnimation(mAnimationStart);
+                break;
             default:
                 break;
         }

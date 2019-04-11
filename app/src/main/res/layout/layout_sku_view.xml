@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/mSkuTitleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin_small"
+        android:layout_marginBottom="@dimen/common_margin"
+        android:textColor="#999999"
+        android:textSize="@dimen/text_small_size" />
+
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/mSkuContentView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        zhy:max_select="1" />
+</LinearLayout>

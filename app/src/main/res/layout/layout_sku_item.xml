@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/common_margin_middle"
+    android:layout_marginBottom="@dimen/common_margin_middle"
+    android:background="@drawable/corner_news_bg"
+    android:gravity="center"
+    android:minWidth="60dp"
+    android:paddingLeft="@dimen/common_padding_middle"
+    android:paddingTop="@dimen/common_padding_small"
+    android:paddingRight="@dimen/common_padding_middle"
+    android:paddingBottom="@dimen/common_padding_small"
+    android:textColor="@drawable/sku_text_selector"
+    android:textSize="@dimen/text_small_size" />
+

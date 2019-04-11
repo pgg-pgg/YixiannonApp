@@ -135,4 +135,7 @@ dependencies {
 
     implementation 'com.github.everhad:AndroidRatingStar:v1.0.4'
 
+    //FlowLayout
+    implementation 'com.zhy:flowlayout-lib:1.0.3'
+
 }

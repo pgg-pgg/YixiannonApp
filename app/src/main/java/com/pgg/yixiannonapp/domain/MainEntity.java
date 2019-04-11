@@ -1,6 +1,7 @@
 package com.pgg.yixiannonapp.domain;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.pgg.yixiannonapp.domain.GoodsDetail.GoodsSku;
 
 import java.util.List;
 
@@ -261,6 +262,7 @@ public class MainEntity implements MultiItemEntity {
         private List<Comments> comments;
         private List<RecommendEntity> recommends;
         private String goodsDetails;
+        private List<GoodsSku> goodsSkus;
 
 
         public int getId() {
@@ -373,6 +375,14 @@ public class MainEntity implements MultiItemEntity {
 
         public void setGoodsDetails(String goodsDetails) {
             this.goodsDetails = goodsDetails;
+        }
+
+        public List<GoodsSku> getGoodsSkus() {
+            return goodsSkus;
+        }
+
+        public void setGoodsSkus(List<GoodsSku> goodsSkus) {
+            this.goodsSkus = goodsSkus;
         }
     }
 
