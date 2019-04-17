@@ -96,11 +96,6 @@ public class MainActivity extends BaseCustomActivity {
             mCurrentIndex=startPage;
         }
 
-//        int qbox_version=(int)SPUtils.get(this,Constant.QBOX_NEW_VERSION,0);
-//        if (qbox_version!=0&&qbox_version> AppUtils.getVersionCode(this)){
-//            //todo 通知提示升级
-//
-//        }
     }
 
     private void switchToFragment(String index) {

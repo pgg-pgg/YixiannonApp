@@ -80,6 +80,10 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
     public void setMenuVisible(boolean visible){
         iv_main_menu.setVisibility(visible?VISIBLE:INVISIBLE);
     }
+
+    public String getRightText(){
+        return tv_title_right.getText().toString();
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -101,7 +105,6 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
 
             case R.id.tv_title_right:
                 //右侧管理
-//                Toast.makeText(context,"管理",Toast.LENGTH_LONG).show();
                 if (rightClickListener!=null){
                     rightClickListener.setRightOnClickListener();
                 }

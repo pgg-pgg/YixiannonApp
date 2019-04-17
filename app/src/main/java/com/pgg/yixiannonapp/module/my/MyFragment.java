@@ -1,10 +1,7 @@
 package com.pgg.yixiannonapp.module.my;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -14,24 +11,22 @@ import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.bumptech.glide.Glide;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.base.BaseFragment;
-import com.pgg.yixiannonapp.domain.CartGoods;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
 import com.pgg.yixiannonapp.domain.UserStateBean;
 import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.module.address.ShipAddressActivity;
 import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
 import com.pgg.yixiannonapp.module.my.activity.EditUserInfoActivity;
+import com.pgg.yixiannonapp.module.order.OrderActivity;
+import com.pgg.yixiannonapp.module.order.common.OrderConstant;
+import com.pgg.yixiannonapp.module.order.common.OrderStatus;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
-import com.pgg.yixiannonapp.utils.GlideUtils;
 import com.pgg.yixiannonapp.utils.SPUtils;
-import com.pgg.yixiannonapp.widget.GridViewChannelView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -108,7 +103,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @OnClick({R.id.civ_userhead_me, R.id.fab_edit_view, R.id.mWaitPayOrderTv, R.id.mWaitConfirmOrderTv, R.id.mCompleteOrderTv,
-            R.id.mEvaluationOrderTv, R.id.tv_my_money, R.id.tv_my_bill, R.id.tv_my_coupon, R.id.tv_my_vip, R.id.tv_my_evaluation,
+            R.id.mEvaluationOrderTv, R.id.mAllOrderTv,R.id.tv_my_money, R.id.tv_my_bill, R.id.tv_my_coupon, R.id.tv_my_vip, R.id.tv_my_evaluation,
             R.id.tv_my_goodsfrom, R.id.tv_my_address, R.id.tv_my_question, R.id.tv_my_phone, R.id.tv_my_opinion, R.id.tv_my_exit})
     public void onClick(View view) {
         Intent intent;
@@ -126,22 +121,33 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.mWaitPayOrderTv:
                 //待付款
-
+                intent = new Intent(getContext(),OrderActivity.class);
+                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_WAIT_PAY);
+                startActivity(intent);
                 break;
-
             case R.id.mWaitConfirmOrderTv:
                 //待收货
-
+                intent = new Intent(getContext(),OrderActivity.class);
+                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_WAIT_CONFIRM);
+                startActivity(intent);
                 break;
-
             case R.id.mCompleteOrderTv:
                 //已完成
-
+                intent = new Intent(getContext(),OrderActivity.class);
+                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_COMPLETED);
+                startActivity(intent);
                 break;
-
             case R.id.mEvaluationOrderTv:
                 //待评价
-
+                intent = new Intent(getContext(),OrderActivity.class);
+                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_CANCELED);
+                startActivity(intent);
+                break;
+            case R.id.mAllOrderTv:
+                //我的订单
+                intent = new Intent(getContext(),OrderActivity.class);
+                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_ALL);
+                startActivity(intent);
                 break;
             case R.id.tv_my_money:
                 //我的余额
@@ -170,7 +176,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.tv_my_address:
                 //收货地址
-
+                intent = new Intent(getContext(),ShipAddressActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_my_question:
                 //常见问题
@@ -222,6 +229,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void clearUserInfoInLocal() {
+        SPUtils.put(getContext(),Constant.USER_ID,"0");
         SPUtils.put(getContext(), Constant.USER_STATE, "0");
         SPUtils.put(getContext(), Constant.USER_NAGE, "");
         SPUtils.put(getContext(), Constant.USER_SIGN, "");

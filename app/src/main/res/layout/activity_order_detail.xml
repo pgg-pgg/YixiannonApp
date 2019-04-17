@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+   <include layout="@layout/layout_title"
+       android:id="@+id/layout_title"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+               android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_gray"
+                android:paddingBottom="@dimen/common_margin_small"
+                android:paddingLeft="@dimen/common_margin"
+                android:paddingTop="@dimen/common_margin"
+                android:text="配送信息"
+                android:textColor="@color/text_light_dark" />
+
+            <com.pgg.yixiannonapp.widget.LabelTextView
+                android:id="@+id/mShipNameTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="收货人:" />
+
+            <com.pgg.yixiannonapp.widget.LabelTextView
+                android:id="@+id/mShipMobileTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="收货电话:" />
+
+            <com.pgg.yixiannonapp.widget.LabelTextView
+                android:id="@+id/mShipAddressTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="收货地址:" />
+
+            <com.pgg.yixiannonapp.widget.LabelTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentText="快递运输"
+                app:labelText="配送方式:" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_gray"
+                android:paddingBottom="@dimen/common_margin_small"
+                android:paddingLeft="@dimen/common_margin"
+                android:paddingTop="@dimen/common_margin"
+                android:text="支付信息"
+                android:textColor="@color/text_light_dark" />
+
+            <com.pgg.yixiannonapp.widget.LabelTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentText="在线支付"
+                app:labelText="支付类型:" />
+
+            <com.pgg.yixiannonapp.widget.LabelTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentText="支付宝支付"
+                app:labelText="支付方式:" />
+
+            <com.pgg.yixiannonapp.widget.LabelTextView
+                android:id="@+id/mTotalPriceTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="实付费用:" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_margin"
+                android:background="@drawable/border_bottom"
+                android:drawableLeft="@drawable/icon_shop"
+                android:drawablePadding="@dimen/common_padding_small"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/common_padding_small"
+                android:paddingLeft="@dimen/common_padding"
+                android:paddingTop="@dimen/common_padding_small"
+                android:text="自营"
+                android:textColor="@color/text_light_dark" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mOrderGoodsRv"
+                style="@style/commonRecyclerView"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

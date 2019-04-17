@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_margin_small"
         android:layout_marginBottom="@dimen/common_margin"
-        android:textColor="#999999"
+        android:textColor="@color/common_white"
         android:textSize="@dimen/text_small_size" />
 
     <com.zhy.view.flowlayout.TagFlowLayout

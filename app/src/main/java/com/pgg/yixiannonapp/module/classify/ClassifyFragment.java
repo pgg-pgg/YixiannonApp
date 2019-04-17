@@ -16,6 +16,7 @@ import com.pgg.yixiannonapp.domain.Classify.ClassifyTypeEntity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
+import com.pgg.yixiannonapp.widget.TitleBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,9 @@ public class ClassifyFragment extends BaseFragment {
     MultiStateView mMultiStateView1;
     @BindView(R.id.mMultiStateView2)
     MultiStateView mMultiStateView2;
+
+    @BindView(R.id.layout_title)
+    TitleBar layout_title;
 
     private int currentCheckItem = 0;
 
@@ -87,6 +91,7 @@ public class ClassifyFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        initTopTitle();
         mMultiStateView1.setViewState(MultiStateView.VIEW_STATE_LOADING);
         classifyTypeEntities = new ArrayList<>();
         HttpData.getInstance().getAllClassifyData(new Observer<Results<List<ClassifyTypeEntity>>>() {
@@ -112,6 +117,14 @@ public class ClassifyFragment extends BaseFragment {
             }
         });
         getClassifyItemEntities(1);
+    }
+
+    private void initTopTitle() {
+        layout_title.setTitleName("分类");
+        layout_title.setMainMsgVisible(false);
+        layout_title.setSearchVisible(false);
+        layout_title.setMenuVisible(false);
+        layout_title.setRightText("");
     }
 
     private void getClassifyItemEntities(int classifyTypeId) {

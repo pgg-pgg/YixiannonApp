@@ -1,9 +1,7 @@
 package com.pgg.yixiannonapp.module.login_register.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -33,8 +31,6 @@ import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.widget.TitleBar;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -171,6 +167,7 @@ public class LoginActivity extends BaseCommonActivity {
     }
 
     private void updateUserInLocal(Results<User> results) {
+        SPUtils.put(getContext(),Constant.USER_ID,results.getData().getId());
         SPUtils.put(getContext(),Constant.USER_NAGE,results.getData().getUser_name());
         SPUtils.put(getContext(),Constant.USER_NICK,results.getData().getUser_nick_name());
         SPUtils.put(getContext(),Constant.USER_STATE,"1");

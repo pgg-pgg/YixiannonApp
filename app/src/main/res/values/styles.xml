@@ -253,8 +253,62 @@
         <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
     </style>
+    <!-- TabLayout文字样式-->
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">@dimen/text_big_size</item>
+    </style>
+
+    <!-- TabLayout通用样式-->
+    <style name="TabsStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="tabIndicatorColor">@color/common_white</item>
+        <item name="tabBackground">@drawable/tab_selector</item>
+        <item name="tabTextAppearance">@style/TabLayoutTextStyle</item>
+        <item name="tabTextColor">#333333</item>
+        <item name="tabSelectedTextColor">@color/common_white</item>
+    </style>
+
+    <!-- 订单中Tab样式-->
+    <style name="TabsStyle.Order" parent="@style/TabsStyle">
+        <item name="tabIndicatorColor">@color/common_blue</item>
+        <item name="tabBackground">@drawable/border_bottom</item>
+        <item name="tabTextColor">#666666</item>
+        <item name="tabSelectedTextColor">@color/common_blue</item>
+    </style>
 
 
+    <!-- 自定义标签字体样式 -->
+    <style name="LabelTitleTextStyle">
+        <item name="android:textSize">@dimen/text_middle_size</item>
+        <item name="android:textColor">@color/text_normal</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- 自定义标签内容字体样式 -->
+    <style name="LabelContentTextStyle" parent="@style/LabelTitleTextStyle">
+        <item name="android:textColor">@color/text_light_dark</item>
+    </style>
+
+    <style name="OrderShipName">
+        <item name="android:textSize">@dimen/text_big_size</item>
+        <item name="android:textColor">@color/text_light_dark</item>
+        <item name="android:background">@color/common_white</item>
+        <item name="android:paddingLeft">@dimen/common_padding</item>
+        <item name="android:paddingTop">@dimen/common_padding_small</item>
+        <item name="android:paddingBottom">@dimen/common_padding_small</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="OrderShipAddress">
+        <item name="android:textSize">@dimen/text_small_size</item>
+        <item name="android:background">@drawable/border_bottom</item>
+        <item name="android:paddingLeft">@dimen/common_padding</item>
+        <item name="android:paddingBottom">20.0dip</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
     <!--<style name="MaterialSearchViewStyle">-->
         <!--&lt;!&ndash; Background for the search bar&ndash;&gt;-->
         <!--<item name="searchBackground">@color/colorPrimary</item>-->

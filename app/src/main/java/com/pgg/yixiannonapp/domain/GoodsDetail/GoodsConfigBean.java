@@ -1,4 +1,4 @@
-package com.pgg.yixiannonapp.domain;
+package com.pgg.yixiannonapp.domain.GoodsDetail;
 
 /**
  * 商品信息中的规格参数bean

@@ -1,18 +1,14 @@
-package com.pgg.yixiannonapp.domain;
+package com.pgg.yixiannonapp.domain.order;
 
-
-/**
- * 购物车商品类
- */
-public class CartGoods {
-    private int id;//购物车单项商品ID
-    private int goodsId;//具体商品ID
-    private String goodsDesc;//商品描述
-    private String goodsIcon;//商品图片
-    private Long goodsPrice;//商品价格
-    private int goodsCount;//商品数量
-    private String goodsSku;//商品SKU
-    private boolean isSelected;//是否选中
+public class OrderGoods {
+    private int id;
+    private int goodsId;
+    private String goodsDesc;
+    private String goodsIcon;
+    private String goodsPrice;
+    private int goodsCount;
+    private String goodsSku;
+    private int orderId;
 
     public int getId() {
         return id;
@@ -46,11 +42,11 @@ public class CartGoods {
         this.goodsIcon = goodsIcon;
     }
 
-    public Long getGoodsPrice() {
+    public String getGoodsPrice() {
         return goodsPrice;
     }
 
-    public void setGoodsPrice(Long goodsPrice) {
+    public void setGoodsPrice(String goodsPrice) {
         this.goodsPrice = goodsPrice;
     }
 
@@ -70,11 +66,11 @@ public class CartGoods {
         this.goodsSku = goodsSku;
     }
 
-    public boolean isSelected() {
-        return isSelected;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setSelected(boolean selected) {
-        isSelected = selected;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

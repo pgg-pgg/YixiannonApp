@@ -6,7 +6,7 @@ import android.widget.ListView;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.adapter.goods_detail.GoodsConfigAdapter;
 import com.pgg.yixiannonapp.base.BaseFragment;
-import com.pgg.yixiannonapp.domain.GoodsConfigBean;
+import com.pgg.yixiannonapp.domain.GoodsDetail.GoodsConfigBean;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
 

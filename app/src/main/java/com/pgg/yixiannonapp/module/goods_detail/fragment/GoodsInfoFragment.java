@@ -1,11 +1,18 @@
 package com.pgg.yixiannonapp.module.goods_detail.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,20 +25,31 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.gxz.PagerSlidingTabStrip;
 import com.pgg.yixiannonapp.R;
 import com.pgg.yixiannonapp.adapter.goods_detail.ItemCommentsAdapter;
 import com.pgg.yixiannonapp.adapter.goods_detail.ItemRecommendAdapter;
 import com.pgg.yixiannonapp.base.BaseFragment;
+import com.pgg.yixiannonapp.domain.CartGoods.CartGoods;
 import com.pgg.yixiannonapp.domain.Comments;
+import com.pgg.yixiannonapp.domain.GoodsDetail.AddCartEvent;
 import com.pgg.yixiannonapp.domain.GoodsDetail.GoodsSku;
 import com.pgg.yixiannonapp.domain.MainEntity;
+import com.pgg.yixiannonapp.domain.Results;
+import com.pgg.yixiannonapp.domain.UserStateBean;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
+import com.pgg.yixiannonapp.module.pay.PayResult;
+import com.pgg.yixiannonapp.net.httpData.HttpData;
 import com.pgg.yixiannonapp.utils.GlideUtils;
+import com.pgg.yixiannonapp.utils.OrderInfoUtil2_0;
+import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.widget.GoodsSkuPopup;
 import com.pgg.yixiannonapp.widget.SlideDetailsLayout;
 import com.youth.banner.Banner;
@@ -39,11 +57,22 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.loader.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.Observer;
+
+import static com.pgg.yixiannonapp.global.Constant.APPID;
+import static com.pgg.yixiannonapp.global.Constant.RSA2_PRIVATE;
+import static com.pgg.yixiannonapp.global.Constant.RSA_PRIVATE;
+import static com.pgg.yixiannonapp.global.Constant.SDK_PAY_FLAG;
 
 public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayout.OnSlideDetailsListener {
 
@@ -125,11 +154,13 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
     private FragmentManager fragmentManager;
     public GoodsDetailActivity activity;
     private MainEntity.RecommendEntity data;
+    private boolean isLogin;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         activity = (GoodsDetailActivity) context;
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -143,6 +174,7 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
 
     @Override
     public void initView() {
+        isLogin = (SPUtils.get(getContext(), Constant.USER_STATE, "0") + "").equals("1");
         fragmentList = new ArrayList<>();
         tabTextList = new ArrayList<>();
         tabTextList.add(tv_goods_detail);
@@ -156,7 +188,7 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
 
     }
 
-    private void initData(MainEntity.RecommendEntity data) {
+    private void initData(final MainEntity.RecommendEntity data) {
         List<MainEntity.RecommendEntity> recommendEntities = data.getRecommends();
         String banner = data.getGoodsBannerUrl();
         String[] split = banner.split(",");
@@ -169,6 +201,148 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
         initDetailData(data);
         initSkuPop();
         loadPopData(data);
+        activity.setOnAddCartListener(new GoodsDetailActivity.OnAddCartListener() {
+            @Override
+            public void addCartGoodsData() {
+                mSkuPop.showAtLocation(contentView, Gravity.BOTTOM & Gravity.CENTER_HORIZONTAL, 0, 0);
+                contentView.startAnimation(mAnimationStart);
+            }
+        });
+
+        activity.setOnSubmitOrderListener(new GoodsDetailActivity.OnSubmitOrderListener() {
+            @Override
+            public void submitOrder() {
+                //购买商品
+                payV2();
+            }
+        });
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    @SuppressWarnings("unchecked")
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    /**
+                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        Toast.makeText(getContext(), "支付成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        Toast.makeText(getContext(), "支付失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 支付宝支付业务
+     */
+    private void payV2() {
+        if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
+            new AlertDialog.Builder(getContext()).setTitle("警告").setMessage("需要配置APPID | RSA_PRIVATE")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialoginterface, int i) {
+
+                        }
+                    }).show();
+            return;
+        }
+
+        /**
+         * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
+         * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
+         * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
+         *
+         * orderInfo的获取必须来自服务端；
+         */
+        boolean rsa2 = (RSA2_PRIVATE.length() > 0);
+        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2);
+        String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+
+        String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;
+        String sign = OrderInfoUtil2_0.getSign(params, privateKey, rsa2);
+        final String orderInfo = orderParam + "&" + sign;
+
+        Runnable payRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(getActivity());
+                Map<String, String> result = alipay.payV2(orderInfo, true);
+                Log.i("msp", result.toString());
+
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = result;
+                mHandler.sendMessage(msg);
+            }
+        };
+
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
+    }
+
+    private void addCartGoods(final MainEntity.RecommendEntity data) {
+        CartGoods cartGoods = new CartGoods();
+        cartGoods.setGoods_sku(mSkuPop.getSelectSku());
+        cartGoods.setGoods_price(Double.parseDouble(data.getGoodsPrice()));
+        cartGoods.setGoods_icon(data.getGoodsImageUrl());
+        cartGoods.setGoods_desc(data.getGoodsDesc());
+        cartGoods.setGoods_count(mSkuPop.getSelectCount());
+        cartGoods.setUser_name((SPUtils.get(getContext(), Constant.USER_NAGE, "") + ""));
+        cartGoods.setGoods_id(data.getId());
+        final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
+        svProgressHUD.show();
+        HttpData.getInstance().addCartGoods(new Observer<Results<CartGoods>>() {
+            @Override
+            public void onCompleted() {
+                Toast.makeText(getContext(),"加入购物车成功,在购物车等亲哦！",Toast.LENGTH_SHORT).show();
+                svProgressHUD.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(getContext(),"加入购物车失败",Toast.LENGTH_SHORT).show();
+                svProgressHUD.dismiss();
+            }
+
+            @Override
+            public void onNext(Results<CartGoods> cartGoodsResults) {
+                if (cartGoodsResults.getCode() == 0) {
+                    //添加成功
+                    EventBus.getDefault().post(cartGoodsResults.getData());
+                    svProgressHUD.showSuccessWithStatus("添加购物车成功");
+                }
+            }
+        }, cartGoods);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(UserStateBean userStateBean) {
+        if (userStateBean != null) {
+            isLogin = !userStateBean.user_state.equals("0");
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(AddCartEvent addCartEvent) {
+        addCartGoods(data);
+        tv_current_goods.setText(mSkuPop.getSelectSku());
+
     }
 
     /**
@@ -206,7 +380,7 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
         for (GoodsSku goodsSku : data.getGoodsSkus()) {
             defaultSku += goodsSku.getSkuContent().get(0) + ",";
         }
-        defaultSku = defaultSku.substring(0,defaultSku.length()-1);
+        defaultSku = defaultSku.substring(0, defaultSku.length() - 1);
         tv_current_goods.setText(defaultSku);
         mSkuPop.setGoodsIcon(Constant.BASE_URL + data.getGoodsImageUrl());
         mSkuPop.setGoodsCode(data.getId() + "");
@@ -422,6 +596,14 @@ public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayou
         @Override
         public void displayImage(Context context, Object path, ImageView imageView) {
             GlideUtils.loadUrlImage(context, path.toString(), imageView);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
     }
 }

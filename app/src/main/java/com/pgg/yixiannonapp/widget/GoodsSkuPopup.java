@@ -60,11 +60,10 @@ public class GoodsSkuPopup extends PopupWindow implements View.OnClickListener {
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出框体的高
         setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        // 设置SelectPicPopupWindow弹出窗体可点击
         setFocusable(true);
         // 设置SelectPicPopupWindow弹出窗体动画效果
         setAnimationStyle(R.style.AnimBottom);
-//        getBackground().setAlpha(150);
+        mRootView.setAlpha(0.9f);
         mRootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -106,13 +105,6 @@ public class GoodsSkuPopup extends PopupWindow implements View.OnClickListener {
             @Override
             public void afterTextChanged(Editable s) {
 
-            }
-        });
-        mRootView.findViewById(R.id.mAddCartBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post(new AddCartEvent());
-                dismiss();
             }
         });
     }
@@ -174,6 +166,7 @@ public class GoodsSkuPopup extends PopupWindow implements View.OnClickListener {
                 dismiss();
                 break;
             case R.id.mAddCartBtn:
+                EventBus.getDefault().post(new AddCartEvent());
                 dismiss();
                 break;
 

@@ -27,7 +27,15 @@ public interface Constant {
     String BASE_URL = "http://10.0.2.2:8080/";
 //    String BASE_URL = "http://192.168.71.124:8080/";
 //    String BASE_URL = "http://172.20.10.14:8080/";
+    /**
+     * 支付宝支付业务：入参app_id
+     */
+    String APPID = "2016091200494687";
 
+    String RSA2_PRIVATE = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCM9iHjB4rO4AnPgqNdmQ6Lk8e0SQ4kBwQ99tSXgm3a3EZ4f7VO7Zum1MhaOZTJrZ5hFwOIsSDdho8U91NVMrdopmg9AJjzOGYU7ivCr7O9Q4apeUukeSdeKlVsOyGbM8jOqgJ9M4URKLqoA8Hw/t12ziE4G79VXieZaI2lvQi3RSH3q0ah68PO6M/ehri0cVCYrMSNLo+I94Jm7XhghRt+B0rHVLh/Qz9BsRw2ENgT6kre4tuOaCMLVH9RztOjsPh/skZfOzffSPLjCXzISPQ6QJo1/764wBlr2bpvasT1I8JCXM4DxP7LBWwBraATXW/3zq67sBvcOgH1M8t+YNc/AgMBAAECggEAbjpKZW4QbZVkFpDhjt+RMDRvhdta43FZL9tEgvXLUcnOkYvMC9xiSyM5SNSeNNc/cky8xrc8K/59BLgiwgzWv07hVFKTSB5iNRvJvIQI2YdkVkIzlHno/wm7otbagLMN5A2txJn1BGYFED1f+0RRigXGlEmeZPMrpBrOKTyZBDYwybW2u27d5lLhjNUQM1d+yCDXeyjsBy8Nh01r57KBRzQfaV+DLpD1l+2wYOO6ZwCtgWjKIitd+uFmOP/YEcdoBKG3CC9TICIILf+i7XOXvKiJJr8n2fi98ppamF/qc4QrdN2UZh5pghzhGP5zKTc+csEXJk0TW7c2huC8Ik/kAQKBgQDRWSGe4Y1DQmTpVmUnUN+lERIsxILA51oEm8xM3bb7YyuTFdYUHZJuaphatg4LqdOdIkdiaUMaN34NOEQ6Q0YBOiEQi1+hTeCSBBwWy0lYWFxcd+BOp6h79kw/Lbpt9WNejkdIFkcRDhDHdvUcb3r5qgwxg+RNrdSRfeooHrDu3wKBgQCsX68jT1O+3VDJ//xWcTKg5svom6vZ5nSL1Bs9TwWMb0/lQ10CyF+ryl9Jx4X6oy3+h9NIfvP1sbZ4XKXtnAtoENkVpfLzH7p/9iWATFTc8K0kz0Pj/hEud23s0QWbE/q9agdADgHjBojjQPPCBfsKb1SfY5LuL/EjG6hBIXIDoQKBgGn4KjKYjb8cHqSWnQF3yJ1vtLmAh4dKFKD8lD/cg0FhA6+igAkSpwrJXnGcciOpRXrm3SeNjO/6Yw4iCzdK0mbQm+gaBMBMAX8oIWfQY0IbCDWuYJav+3M0S4g3h4Udj71PW/m7fSG+8vNk3dIVBDTYxO9Tif9gHJfBGwRP9NQVAoGBAIoIwZY0EysXzXdFT8vlMBbbW1S1PIPs4U2MGBgbbKUOClvceuIclUhbcb0CUw7nl5BpMk+uoiwRGL7/6jwBpry6KS0FzCzXLqED+vnnplmbPfvpIkO0FAwyxUtMAwIxmKwP+ShZTzd+5yWcwNaRtXugtZJBycqFh8OGhVFKuCOhAoGBAIOb2Xvw3Yjwo2j4OJ/Y8zglkt7EcNq5jt1LRAizfPQr2xnSRk307FGkzakdcGPTnjsbOqjrPXkkG7npyMjuMWoMPleIKdxNKIixJr6PLfEIxWezghpD/9YtrovPevnvHAjWTOUZUlFFLncjKp5WfGxpksz1vGu+iA3orv9QFprq";
+    String RSA_PRIVATE = "";
+    int SDK_PAY_FLAG = 1;
+    String USER_ID = "user_id";
     String USER_NAGE = "user_name";
     String USER_NICK = "user_nick";
     String USER_SIGN = "user_sign";
@@ -41,5 +49,7 @@ public interface Constant {
     String CLICK_TITLE = "mTitle";
 
     String GOODS_TITLE = "goods_title";
+
+    String KEY_ORDER_ID = "order_id";
 
 }

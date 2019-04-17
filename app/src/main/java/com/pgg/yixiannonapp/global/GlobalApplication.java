@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.pgg.yixiannonapp.module.MainActivity;
 import com.pgg.yixiannonapp.utils.SharedPrefHelper;
@@ -43,6 +44,7 @@ public class GlobalApplication extends Application {
         initScreenSize();
         sharedPrefHelper = SharedPrefHelper.getInstance();
         Fresco.initialize(this);
+        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 
         //开启极光调试
         JPushInterface.setDebugMode(true);

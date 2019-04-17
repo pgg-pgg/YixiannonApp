@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 
 import com.pgg.yixiannonapp.R;
-import com.pgg.yixiannonapp.domain.GoodsConfigBean;
+import com.pgg.yixiannonapp.domain.GoodsDetail.GoodsConfigBean;
 
 import java.util.List;
 

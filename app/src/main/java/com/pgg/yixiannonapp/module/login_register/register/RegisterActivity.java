@@ -188,6 +188,7 @@ public class RegisterActivity extends BaseCommonActivity {
                                     }
                                 });
                             }
+                            SPUtils.put(getContext(),Constant.USER_ID,results.getData().getId());
                             initLogin(user_name,user_pwd);
                             finish();
                         }else {
@@ -240,6 +241,7 @@ public class RegisterActivity extends BaseCommonActivity {
                         registerError("密码错误");
                         break;
                     case 0:
+
                         SPUtils.put(getContext(),Constant.USER_NAGE,user.getUser_name());
                         SPUtils.put(getContext(),Constant.USER_NICK,user.getUser_nick_name());
                         SPUtils.put(getContext(),Constant.USER_STATE,"1");
