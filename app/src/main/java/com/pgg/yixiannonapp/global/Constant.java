@@ -52,4 +52,12 @@ public interface Constant {
 
     String KEY_ORDER_ID = "order_id";
 
+    String SHIP_USERNAME = "shipUserName";
+    String SHIP_ID="shipId";
+    String SHIP_MOBILE = "shipUserMobile";
+    String SHIP_ADDRESS = "shipAddress";
+    String SHIP_DEFAULT = "shipIsDefault";
+
+    String ISCHOOSE_ADDRESS = "isChooseAddress";
+
 }

@@ -52,7 +52,7 @@ public class OrderAdapter extends BaseQuickAdapter<Order,BaseViewHolder> {
             GlideUtils.loadImage(mContext,Constant.BASE_URL+orderGoods.getGoodsIcon(),mGoodsIconIv);
             mGoodsDescTv.setText(orderGoods.getGoodsDesc());
             mGoodsPriceTv.setText(orderGoods.getGoodsPrice()+"元/斤");
-            mGoodsCountTv.setText(orderGoods.getGoodsCount());
+            mGoodsCountTv.setText(orderGoods.getGoodsCount()+"");
             mTotalCount = orderGoods.getGoodsCount();
         }else{
             //多个商品

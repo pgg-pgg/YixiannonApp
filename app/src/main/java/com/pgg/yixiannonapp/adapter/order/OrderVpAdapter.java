@@ -11,7 +11,7 @@ import com.pgg.yixiannonapp.module.order.fragment.OrderFragment;
 
 public class OrderVpAdapter extends FragmentPagerAdapter {
 
-    private String[] titles = new String[]{"全部","待付款","待收货","已完成","待评价"};
+    private String[] titles = new String[]{"全部","待付款","待收货","已完成","已取消"};
     public OrderVpAdapter(FragmentManager fm) {
         super(fm);
     }

@@ -45,6 +45,7 @@ public class ShipAddressActivity extends BaseCustomActivity {
 
     private ShipAddressAdapter mAdapter;
     private List<ShipAddress> list = new ArrayList<>();
+    private boolean isChooseAddress;
 
     @Override
     public void initContentView() {
@@ -54,13 +55,14 @@ public class ShipAddressActivity extends BaseCustomActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         initTopTitle();
+        isChooseAddress = getIntent().getBooleanExtra(Constant.ISCHOOSE_ADDRESS, false);
         mAddressRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new ShipAddressAdapter(R.layout.layout_address_item, list);
         mAddressRv.setAdapter(mAdapter);
 
         mAdapter.setOnOptClickListener(new ShipAddressAdapter.OnOptClickListener() {
             @Override
-            public void onSetDefault(ShipAddress address) {
+            public void onSetDefault(final ShipAddress address) {
                 //设为默认地址
                 final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
                 svProgressHUD.show();
@@ -78,7 +80,12 @@ public class ShipAddressActivity extends BaseCustomActivity {
                     @Override
                     public void onNext(Results<ShipAddress> shipAddressResults) {
                         if (shipAddressResults.getCode() == 0) {
-                            svProgressHUD.dismiss();
+                            initData();
+                            SPUtils.put(getContext(),Constant.SHIP_ID,address.getId());
+                            SPUtils.put(getContext(),Constant.SHIP_ADDRESS,address.getShipAddress());
+                            SPUtils.put(getContext(),Constant.SHIP_DEFAULT,address.getShipIsDefault());
+                            SPUtils.put(getContext(),Constant.SHIP_MOBILE,address.getShipUserMobile());
+                            SPUtils.put(getContext(),Constant.SHIP_USERNAME,address.getShipUserName());
                         }
                     }
                 }, address);
@@ -127,8 +134,10 @@ public class ShipAddressActivity extends BaseCustomActivity {
         mAdapter.setOnItemClickListener(new ShipAddressAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(View view, ShipAddress address) {
-                EventBus.getDefault().post(new SelectAddressEvent(address));
-                finish();
+                if (isChooseAddress){
+                    EventBus.getDefault().post(new SelectAddressEvent(address));
+                    finish();
+                }
             }
         });
         mAddAddressBtn.setOnClickListener(new View.OnClickListener() {

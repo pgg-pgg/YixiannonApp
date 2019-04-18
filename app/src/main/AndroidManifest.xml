@@ -55,10 +55,6 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".module.pay.PayDemoActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".module.pay.H5PayDemoActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"

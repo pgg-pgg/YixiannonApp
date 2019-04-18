@@ -6,12 +6,14 @@ import com.pgg.yixiannonapp.domain.Classify.ClassifyTypeEntity;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.domain.User;
+import com.pgg.yixiannonapp.domain.order.Order;
 import com.pgg.yixiannonapp.domain.order.ShipAddress;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.net.api.CartGoodsService;
 import com.pgg.yixiannonapp.net.api.ClassifyService;
 import com.pgg.yixiannonapp.net.api.GoodsDetailService;
 import com.pgg.yixiannonapp.net.api.MainService;
+import com.pgg.yixiannonapp.net.api.OrderService;
 import com.pgg.yixiannonapp.net.api.ShipAddressService;
 import com.pgg.yixiannonapp.net.api.UserService;
 import com.pgg.yixiannonapp.net.retrofit.RetrofitUtils;
@@ -51,6 +53,7 @@ public class HttpData {
     protected GoodsDetailService goodsDetailService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(GoodsDetailService.class);
     protected CartGoodsService cartGoodsService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(CartGoodsService.class);
     protected ShipAddressService shipAddressService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(ShipAddressService.class);
+    protected OrderService orderService = RetrofitUtils.getRetrofit(Constant.BASE_URL).create(OrderService.class);
 
     private static class SingletonHolder {
         private static final HttpData INSTANCE = new HttpData();
@@ -142,6 +145,26 @@ public class HttpData {
         setSubscribe(resultsObservable,observer);
     }
 
+
+    public void addOrder(Observer<Results<Order>> observer, Order order){
+        Observable<Results<Order>> resultsObservable = orderService.addOrder(order);
+        setSubscribe(resultsObservable,observer);
+    }
+
+    public void getOrderList(Observer<Results<List<Order>>> observer, String userName){
+        Observable<Results<List<Order>>> resultsObservable = orderService.getOrderList(userName);
+        setSubscribe(resultsObservable,observer);
+    }
+
+    public void getOrderListByStatus(Observer<Results<List<Order>>> observer,String userName,int orderStatus){
+        Observable<Results<List<Order>>> resultsObservable = orderService.getOrderListByStatus(userName,orderStatus);
+        setSubscribe(resultsObservable,observer);
+    }
+
+    public void updateOrderStatus(Observer<Results<Order>> observer,int orderStatus,int id){
+        Observable<Results<Order>> resultsObservable = orderService.updateOrderStatus(orderStatus,id);
+        setSubscribe(resultsObservable,observer);
+    }
 
 
 

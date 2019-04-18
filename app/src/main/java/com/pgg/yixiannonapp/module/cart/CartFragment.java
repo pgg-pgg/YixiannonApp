@@ -27,11 +27,14 @@ import com.pgg.yixiannonapp.domain.CartGoods.CartAllCheckedEvent;
 import com.pgg.yixiannonapp.domain.CartGoods.CartGoods;
 import com.pgg.yixiannonapp.domain.CartGoods.UpdateTotalPriceEvent;
 import com.pgg.yixiannonapp.domain.Results;
+import com.pgg.yixiannonapp.domain.SelectAddressEvent;
 import com.pgg.yixiannonapp.domain.UserStateBean;
+import com.pgg.yixiannonapp.domain.order.Order;
+import com.pgg.yixiannonapp.domain.order.OrderGoods;
+import com.pgg.yixiannonapp.domain.order.ShipAddress;
 import com.pgg.yixiannonapp.global.Constant;
+import com.pgg.yixiannonapp.module.address.ShipAddressActivity;
 import com.pgg.yixiannonapp.module.login_register.login.LoginActivity;
-import com.pgg.yixiannonapp.module.pay.AuthResult;
-import com.pgg.yixiannonapp.module.pay.PayDemoActivity;
 import com.pgg.yixiannonapp.module.pay.PayResult;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
 import com.pgg.yixiannonapp.utils.OrderInfoUtil2_0;
@@ -82,7 +85,11 @@ public class CartFragment extends BaseFragment {
     List<CartGoods> cartGoods = null;
 
     private Double mTotalPrice = 0d;
+    private ShipAddress shipAddress;
+    private int orderStatus = 0;
 
+    private List<OrderGoods> orderGoodsList;
+    private List<Integer> list;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @SuppressWarnings("unused")
@@ -100,10 +107,15 @@ public class CartFragment extends BaseFragment {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         Toast.makeText(getContext(), "支付成功", Toast.LENGTH_SHORT).show();
+                        orderStatus = 2;
+                        addOrder(list);
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        orderStatus = 1;
                         Toast.makeText(getContext(), "支付失败", Toast.LENGTH_SHORT).show();
+                        addOrder(list);
                     }
+
                     break;
                 }
                 default:
@@ -111,7 +123,6 @@ public class CartFragment extends BaseFragment {
             }
         }
     };
-
 
 
     @OnClick({R.id.tv_to_login, R.id.mSettleAccountsBtn, R.id.mDeleteBtn, R.id.mAllCheckedCb})
@@ -123,7 +134,7 @@ public class CartFragment extends BaseFragment {
                 break;
             case R.id.mSettleAccountsBtn:
                 //去结算
-                List<Integer> list = new ArrayList<>();
+                list = new ArrayList<>();
                 List<CartGoods> data = adapter.getData();
                 for (CartGoods cartGoods : data) {
                     if (cartGoods.isSelected()) {
@@ -134,9 +145,8 @@ public class CartFragment extends BaseFragment {
                     Toast.makeText(getContext(), "请选择需要结算的数据", Toast.LENGTH_SHORT).show();
                 } else {
                     //提交结算
-//                    startActivity(new Intent(getActivity(),PayDemoActivity.class));
                     payV2();
-                    Toast.makeText(getContext(), "结算"+mTotalPrice, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "结算" + mTotalPrice, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.mDeleteBtn:
@@ -151,6 +161,65 @@ public class CartFragment extends BaseFragment {
                 adapter.notifyDataSetChanged();
                 updateTotalPrice();
                 break;
+        }
+    }
+
+    private void addOrder(List<Integer> list) {
+        int ship_id = (int) SPUtils.get(getContext(), Constant.SHIP_ID, -1);
+        if (ship_id == -1) {
+            new AlertDialog.Builder(getContext()).setTitle("警告").setMessage("未设置默认地址，请选择地址")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialoginterface, int i) {
+                            Intent intent = new Intent(getContext(), ShipAddressActivity.class);
+                            intent.putExtra(Constant.ISCHOOSE_ADDRESS, true);
+                            startActivity(intent);
+                        }
+                    }).show();
+        } else {
+            final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
+            svProgressHUD.show();
+            orderGoodsList = new ArrayList<>();
+            for (CartGoods cartGoods : adapter.getData()) {
+                if (cartGoods.isSelected()) {
+                    OrderGoods orderGoods = new OrderGoods();
+                    orderGoods.setGoodsCount(cartGoods.getGoods_count());
+                    orderGoods.setGoodsDesc(cartGoods.getGoods_desc());
+                    orderGoods.setGoodsIcon(cartGoods.getGoods_icon());
+                    orderGoods.setGoodsPrice(cartGoods.getGoods_price() + "");
+                    orderGoods.setGoodsSku(cartGoods.getGoods_sku());
+                    orderGoods.setGoodsId(cartGoods.getGoods_id());
+                    orderGoodsList.add(orderGoods);
+                }
+            }
+            final String userName = SPUtils.get(getContext(), Constant.USER_NAGE, "") + "";
+            final Order order = new Order();
+            order.setTotalPrice(mTotalPrice);
+            order.setUserName(userName);
+            order.setOrderGoodsList(orderGoodsList);
+            order.setOrderStatus(orderStatus);
+            order.setPayType(0);
+            order.setCartGoodsIds(list);
+            shipAddress = new ShipAddress();
+            shipAddress.setId(ship_id);
+            order.setShipAddress(shipAddress);
+            HttpData.getInstance().addOrder(new Observer<Results<Order>>() {
+                @Override
+                public void onCompleted() {
+                    svProgressHUD.dismiss();
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    svProgressHUD.showErrorWithStatus("添加订单失败");
+                }
+
+                @Override
+                public void onNext(Results<Order> orderResults) {
+                    if (orderResults.getCode() == 0) {
+                        getCartGoodsData(userName);
+                    }
+                }
+            }, order);
         }
     }
 
@@ -176,7 +245,7 @@ public class CartFragment extends BaseFragment {
          * orderInfo的获取必须来自服务端；
          */
         boolean rsa2 = (RSA2_PRIVATE.length() > 0);
-        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2);
+        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2,mTotalPrice);
         String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 
         String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;
@@ -201,8 +270,9 @@ public class CartFragment extends BaseFragment {
         Thread payThread = new Thread(payRunnable);
         payThread.start();
     }
+
     private void deleteCartGoods() {
-        List<Integer> list = new ArrayList<>();
+        list = new ArrayList<>();
         List<CartGoods> data = adapter.getData();
         for (CartGoods cartGoods : data) {
             if (cartGoods.isSelected()) {
@@ -286,7 +356,6 @@ public class CartFragment extends BaseFragment {
         HttpData.getInstance().getCartGoodsList(new Observer<Results<List<CartGoods>>>() {
             @Override
             public void onCompleted() {
-                mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
             }
 
             @Override
@@ -300,6 +369,7 @@ public class CartFragment extends BaseFragment {
                     if (listResults.getData().size() <= 0) {
                         mMultiStateView.setViewState(MultiStateView.VIEW_STATE_EMPTY);
                     } else {
+                        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                         cartGoods.clear();
                         cartGoods.addAll(listResults.getData());
                         adapter.notifyDataSetChanged();
@@ -329,6 +399,54 @@ public class CartFragment extends BaseFragment {
     public void Event(CartGoods cartGoods) {
         String user_name = SPUtils.get(getContext(), Constant.USER_NAGE, "") + "";
         getCartGoodsData(user_name);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(SelectAddressEvent event) {
+        final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
+        svProgressHUD.show();
+        orderGoodsList = new ArrayList<>();
+        for (CartGoods cartGoods : adapter.getData()) {
+            if (cartGoods.isSelected()) {
+                OrderGoods orderGoods = new OrderGoods();
+                orderGoods.setGoodsCount(cartGoods.getGoods_count());
+                orderGoods.setGoodsDesc(cartGoods.getGoods_desc());
+                orderGoods.setGoodsIcon(cartGoods.getGoods_icon());
+                orderGoods.setGoodsPrice(cartGoods.getGoods_price() + "");
+                orderGoods.setGoodsSku(cartGoods.getGoods_sku());
+                orderGoods.setGoodsId(cartGoods.getGoods_id());
+                orderGoodsList.add(orderGoods);
+            }
+        }
+        final String userName = SPUtils.get(getContext(), Constant.USER_NAGE, "") + "";
+        final Order order = new Order();
+        order.setTotalPrice(mTotalPrice);
+        order.setUserName(userName);
+        order.setOrderGoodsList(orderGoodsList);
+        order.setOrderStatus(orderStatus);
+        order.setPayType(0);
+        order.setCartGoodsIds(list);
+        shipAddress = event.getAddress();
+        order.setShipAddress(shipAddress);
+        HttpData.getInstance().addOrder(new Observer<Results<Order>>() {
+            @Override
+            public void onCompleted() {
+                svProgressHUD.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                svProgressHUD.showErrorWithStatus("添加订单失败");
+            }
+
+            @Override
+            public void onNext(Results<Order> orderResults) {
+                if (orderResults.getCode() == 0) {
+                    getCartGoodsData(userName);
+                }
+            }
+        }, order);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
