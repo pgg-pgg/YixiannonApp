@@ -89,33 +89,10 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/border_all">
 
-        <TextView
-            android:id="@+id/tv_shop_business"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/common_margin"
-            android:drawableTop="@drawable/icon_goods_business"
-            android:drawablePadding="1sp"
-            android:gravity="center"
-            android:text="商家"
-            android:textSize="10sp" />
-
-        <Button
-            android:id="@+id/btn_buy_cur"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@color/common_red"
-            android:text="立即购买"
-            android:textColor="@color/common_white"
-            android:textSize="@dimen/text_big_size" />
-
         <Button
             android:id="@+id/btn_add_cart"
-            android:layout_width="120dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/btn_buy_cur"
             android:background="@color/common_yellow"
             android:text="加入购物车"
             android:textColor="@color/common_white"

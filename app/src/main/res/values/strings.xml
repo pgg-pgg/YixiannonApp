@@ -42,7 +42,7 @@
     <string name="wait_pay_order">待付款</string>
     <string name="wait_confirm_order">待收货</string>
     <string name="complete_order">已完成</string>
-    <string name="wait_evaluation">待评价</string>
+    <string name="wait_evaluation">已取消</string>
     <string name="my_center">我的中心</string>
     <string name="my_money">我的余额</string>
     <string name="my_bill">我的账单</string>

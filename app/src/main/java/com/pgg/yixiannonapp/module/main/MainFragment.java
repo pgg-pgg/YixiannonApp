@@ -10,9 +10,13 @@ import com.pgg.yixiannonapp.domain.Results;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
 import com.pgg.yixiannonapp.widget.SearchTextFlipperView;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,8 @@ public class MainFragment extends BaseFragment{
     RecyclerView rv_main_view;
     @BindView(R.id.mMultiStateView)
     MultiStateView mMultiStateView;
+    @BindView(R.id.iv_main_menu)
+    ImageView iv_main_menu;
     private int curPage = 0;
     private int pageNum = 5;
 
@@ -147,6 +153,14 @@ public class MainFragment extends BaseFragment{
         ll_main_search.setContainerBackground(R.drawable.corner_news_bg);
         ll_main_search.setLineVertical(false);
         ll_main_search.setData(data);
+        ll_main_search.findViewById(R.id.mFlipperView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到搜索界面
+                startActivity(new Intent(getContext(),SearchActivity.class));
+            }
+        });
+        iv_main_menu.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -57,19 +57,11 @@ public class GoodsDetailActivity extends BaseCommonActivity {
         setContentView(R.layout.activity_goods_detail);
     }
 
-    @OnClick({R.id.tv_shop_business, R.id.btn_add_cart, R.id.btn_buy_cur})
+    @OnClick({R.id.btn_add_cart,R.id.iv_back})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_shop_business:
-                if (isLogin){
-                    //todo:跳转到商家信息
-                }else {
-                    showToast("请先登录后再选购商品");
-                }
-                break;
             case R.id.btn_add_cart:
                 if (isLogin){
-                    //todo:添加购物车
                     if (listener!=null){
                         listener.addCartGoodsData();
                     }
@@ -77,15 +69,8 @@ public class GoodsDetailActivity extends BaseCommonActivity {
                     showToast("请先登录后再选购商品");
                 }
                 break;
-            case R.id.btn_buy_cur:
-                if (isLogin){
-                    //todo:购买商品
-                    if (submitOrderListener!=null){
-                        submitOrderListener.submitOrder();
-                    }
-                }else {
-                    showToast("请先登录后再选购商品");
-                }
+            case R.id.iv_back:
+                finish();
                 break;
         }
     }
@@ -160,14 +145,5 @@ public class GoodsDetailActivity extends BaseCommonActivity {
 
     public interface OnAddCartListener{
         void addCartGoodsData();
-    }
-
-    private OnSubmitOrderListener submitOrderListener;
-    public void setOnSubmitOrderListener(OnSubmitOrderListener listener){
-        this.submitOrderListener = listener;
-    }
-
-    public interface OnSubmitOrderListener{
-        void submitOrder();
     }
 }

@@ -166,6 +166,11 @@ public class HttpData {
         setSubscribe(resultsObservable,observer);
     }
 
+    public void searchGoodsByName(Observer<Results<List<MainEntity.RecommendEntity>>> observer, String goodsName){
+        Observable<Results<List<MainEntity.RecommendEntity>>> resultsObservable = mainService.searchGoodsByName(goodsName);
+        setSubscribe(resultsObservable,observer);
+    }
+
 
 
     private static <T> void setSubscribe(Observable<T> listObservable, Observer<T> observable) {

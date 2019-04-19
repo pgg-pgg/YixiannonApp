@@ -26,4 +26,7 @@ public interface MainService {
     @GET("Home/getRecommendData")
     Observable<Results<List<MainEntity.RecommendEntity>>> getRecommendData(@Query("curPage")int curPage, @Query("pageNum")int pageNum);
 
+
+    @GET("Home/searchGoodsByName")
+    Observable<Results<List<MainEntity.RecommendEntity>>> searchGoodsByName(@Query("goodsName")String goodsName);
 }

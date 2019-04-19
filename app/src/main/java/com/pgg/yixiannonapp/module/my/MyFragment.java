@@ -76,7 +76,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
     TextView tv_my_opinion;
     @BindView(R.id.tv_my_exit)
     TextView tv_my_exit;
-
+    private boolean isLogin= false;
     @Override
     public int getLayoutRes() {
         return R.layout.fragment_my;
@@ -87,8 +87,9 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
         String user_name = SPUtils.get(getContext(), Constant.USER_NAGE, "") + "";
         String user_nick_name = SPUtils.get(getContext(), Constant.USER_NICK, "") + "";
         String user_sign = SPUtils.get(getContext(), Constant.USER_SIGN, "") + "";
+        isLogin = (SPUtils.get(getContext(), Constant.USER_STATE, "0") + "").equals("1");
         fab_edit_view.setEnabled(false);
-        if ((SPUtils.get(getContext(), Constant.USER_STATE, "0") + "").equals("1")) {
+        if (isLogin) {
             //用户已登录
             Glide.with(getContext()).load(Constant.BASE_URL + "image/" + user_name + ".jpg")
                     .error(R.drawable.ocnyang)
@@ -116,63 +117,76 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.fab_edit_view:
                 //编辑个人信息
-                intent = new Intent(getContext(), EditUserInfoActivity.class);
+                if (!isLogin){
+                    intent = new Intent(getContext(),LoginActivity.class);
+                }else {
+                    intent = new Intent(getContext(), EditUserInfoActivity.class);
+                }
                 startActivity(intent);
                 break;
             case R.id.mWaitPayOrderTv:
                 //待付款
-                intent = new Intent(getContext(),OrderActivity.class);
-                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_WAIT_PAY);
+                if (!isLogin){
+                    intent = new Intent(getContext(),LoginActivity.class);
+                }else {
+                    intent = new Intent(getContext(),OrderActivity.class);
+                    intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_WAIT_PAY);
+                }
                 startActivity(intent);
                 break;
             case R.id.mWaitConfirmOrderTv:
                 //待收货
-                intent = new Intent(getContext(),OrderActivity.class);
-                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_WAIT_CONFIRM);
+                if (!isLogin){
+                    intent = new Intent(getContext(),LoginActivity.class);
+                }else {
+                    intent = new Intent(getContext(),OrderActivity.class);
+                    intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_WAIT_CONFIRM);
+                }
                 startActivity(intent);
                 break;
             case R.id.mCompleteOrderTv:
                 //已完成
-                intent = new Intent(getContext(),OrderActivity.class);
-                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_COMPLETED);
+                if (!isLogin){
+                    intent = new Intent(getContext(),LoginActivity.class);
+                }else {
+                    intent = new Intent(getContext(),OrderActivity.class);
+                    intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_COMPLETED);
+                }
                 startActivity(intent);
                 break;
             case R.id.mEvaluationOrderTv:
-                //待评价
-                intent = new Intent(getContext(),OrderActivity.class);
-                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_CANCELED);
+                //已取消
+                if (!isLogin){
+                    intent = new Intent(getContext(),LoginActivity.class);
+                }else {
+                    intent = new Intent(getContext(),OrderActivity.class);
+                    intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_CANCELED);
+                }
                 startActivity(intent);
                 break;
             case R.id.mAllOrderTv:
                 //我的订单
-                intent = new Intent(getContext(),OrderActivity.class);
-                intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_ALL);
+                if (!isLogin){
+                    intent = new Intent(getContext(),LoginActivity.class);
+                }else {
+                    intent = new Intent(getContext(),OrderActivity.class);
+                    intent.putExtra(OrderConstant.KEY_ORDER_STATUS,OrderStatus.ORDER_ALL);
+                }
                 startActivity(intent);
                 break;
             case R.id.tv_my_money:
                 //我的余额
-
-                break;
-
             case R.id.tv_my_bill:
                 //我的账单
-
-                break;
             case R.id.tv_my_coupon:
                 //优惠券
-
-                break;
             case R.id.tv_my_vip:
                 //我的特权
-
-                break;
             case R.id.tv_my_evaluation:
                 //我的评价
-
-                break;
             case R.id.tv_my_goodsfrom:
                 //关心货源
-
+                Toast.makeText(getContext(),"等待后续开发",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_my_address:
                 //收货地址
@@ -181,18 +195,12 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.tv_my_question:
                 //常见问题
-
-                break;
             case R.id.tv_my_phone:
                 //客服电话
-
-                break;
-
             case R.id.tv_my_opinion:
                 //意见反馈
-
+                Toast.makeText(getContext(),"等待后续开发",Toast.LENGTH_SHORT).show();
                 break;
-
             case R.id.tv_my_exit:
                 //退出登录
                 final SVProgressHUD svProgressHUD = new SVProgressHUD(getContext());
@@ -219,6 +227,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
                             clearUserInfoInLocal();
                             //退出登录成功之后，通知界面刷新
                             setLoginState(user, false);
+                            isLogin = false;
                             EventBus.getDefault().post(UserStateBean.getInstance("0"));
                         }
                     }
@@ -242,6 +251,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(User user) {
+        isLogin = true;
         setLoginState(user, true);
     }
 
