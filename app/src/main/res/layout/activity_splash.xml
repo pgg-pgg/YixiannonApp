@@ -15,7 +15,7 @@
         android:layout_height="100dp"
         android:layout_centerInParent="true"
         android:alpha="0.0"
-        android:src="@drawable/onlylogo"
+        android:src="@mipmap/ic_launcher"
         tools:ignore="SpUsage"/>
     <TextView
         android:id="@+id/welcome_text"
