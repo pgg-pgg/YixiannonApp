@@ -153,7 +153,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
         imageLoader.loadImage(imageAvatarSend, userInfo.getAvatarFile().toURI().toString());
         imageLoader.loadImage(imageAvatarReceive, imgRecrive);
         mTitleBarBack.setVisibility(View.VISIBLE);
-//        initIsOnline();
         initInputView();
     }
 
@@ -341,7 +340,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
             }
         };
 
-
         /**
          * 自定义viewholder
          */
@@ -358,9 +356,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
          * 3、ImageLoader 的实例，用来展示头像。如果为空，将会隐藏头像。
          */
         final MsgListAdapter.HoldersConfig holdersConfig = new MsgListAdapter.HoldersConfig();
-//
-//        holdersConfig.setSenderTxtMsg(MyTexViewHolder.class,R.layout.item_msglist_send);
-//        holdersConfig.setReceiverTxtMsg(MyTexViewHolder.class,R.layout.item_msglist_send);
         mAdapter = new MsgListAdapter<MyMessage>(helper.getUserId(), holdersConfig, imageLoader);
         //单击消息事件，可以选择查看大图或者播放视频
         mAdapter.setOnMsgClickListener(new MsgListAdapter.OnMsgClickListener<MyMessage>() {
@@ -370,9 +365,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
                 if (message.getType() == IMessage.MessageType.RECEIVE_VIDEO
                         || message.getType() == SEND_VIDEO) {
                     if (!TextUtils.isEmpty(message.getMediaFilePath())) {
-//                        Intent intent = new Intent(mContext, MsgVideoActivity.class);
-////                        intent.putExtra(MsgVideoActivity.VIDEO_PATH, message.getMediaFilePath());
-//                        startActivity(intent);
                     }
                 } else {
                     showToast("点击了消息");
@@ -384,14 +376,8 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
         mAdapter.setMsgLongClickListener(new MsgListAdapter.OnMsgLongClickListener<MyMessage>() {
             @Override
             public void onMessageLongClick(final MyMessage message) {
-//                Log.e("mymessage", "id:" + mMsgList.getId()
-//                        + "\nposition:" + message.getPosition()
-//                        + "\ntype:" + message.getType()
-//                        + "\nmessage:"+message.getMessage()
-//                +"\nMsgId:"+message.getMsgId());
                 String[] strings;
                 msgID = message.getMsgId();
-//                Log.e("msgIDLong", msgID);
 
                 //判断消息类型
                 if (message.getType() == SEND_TEXT
@@ -478,13 +464,9 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
                 DefaultUser userInfo = (DefaultUser) message.getFromUser();
                 Intent intent;
                 if (message.getType() == SEND_TEXT) {
-//                    intent = new Intent(mContext, UserActivty.class);
                 } else {
-//                    intent = new Intent(mContext, UserInfoActivity.class);
-//                    intent.putExtra("USERNAME", userName);
                 }
                 Log.e("userName", userInfo + "\n" + userName);
-//                startActivity(intent);
             }
         });
 
@@ -528,10 +510,7 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
 
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        if (oldh - h > 300) {
-//            mChatInput.setMenuContainerHeight(oldh - h);
-//            mChatView.setMenuHeight(oldh - h);
-        }
+        if (oldh - h > 300) { }
         scrollToBottom();
     }
 
@@ -553,8 +532,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.title_bar_title:
-//                Intent intent = new Intent(mContext, UserInfoActivity.class);
-//                intent.putExtra("USERNAME", userName);
                 break;
             case R.id.title_bar_back:
                 finish();
@@ -562,7 +539,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
                 conversation.resetUnreadCount();
                 break;
             case R.id.title_options_tv:
-                //
                 MyAlertDialog dialog = new MyAlertDialog(this, new String[]{"清空聊天记录", "清空并删除会话"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -575,7 +551,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
                                     mAdapter.notifyDataSetChanged();
                                     hideProgress();
                                 }
-
                                 break;
                             case 1:
                                 showProgress("正在删除");
@@ -615,7 +590,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
             }
         });
         JMessageClient.sendMessage(message1);
-//        EventBus.getDefault().post(new MessageEvent(1,"",message1));
         if (mData != null) {
             mData.clear();
         }
@@ -624,29 +598,7 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
     /*获取对方在线状态*/
     String state;
 
-    public void friendState() {
-//        NetWorkManager.isFriendState(userName, new Callback<UserStateBean>() {
-//            @Override
-//            public void onResponse(Call<UserStateBean> call, Response<UserStateBean> response) {
-//                if (response.code() == 200) {
-//                    if (response.body().online) {
-//                        state = "[在线]";
-//                    } else {
-//                        state = "[离线]";
-//                    }
-//                    mTitleBarTitle.setText(userName + state);
-//                } else {
-//                    mTitleBarTitle.setText(userName);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserStateBean> call, Throwable throwable) {
-////                LogUtils.e(throwable.getMessage()+".");
-//            }
-//        });
-
-    }
+    public void friendState() { }
     @Override
     public void initPresenter() {
 
@@ -658,16 +610,7 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
             case MotionEvent.ACTION_DOWN:
                 ChatInputView chatInputView = mChatView.getChatInputView();
 
-                if (view.getId() == chatInputView.getInputView().getId()) {
-
-//                    if (chatInputView.getMenuState() == View.VISIBLE
-//                            && !chatInputView.getSoftInputState()) {
-//                        chatInputView.dismissMenuAndResetSoftMode();
-//                        return false;
-//                    } else {
-//                        return false;
-//                    }
-                }
+                if (view.getId() == chatInputView.getInputView().getId()) { }
                 if (chatInputView.getMenuState() == View.VISIBLE) {
                     chatInputView.dismissMenuLayout();
                 }
@@ -678,7 +621,6 @@ public class ChatMsgActivity extends BaseCommonActivity implements ChatView.OnSi
                         mWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                                 | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                         view.clearFocus();
-//                        chatInputView.setSoftInputState(false);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

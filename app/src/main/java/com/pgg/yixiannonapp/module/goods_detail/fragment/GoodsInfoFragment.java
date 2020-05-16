@@ -1,18 +1,11 @@
 package com.pgg.yixiannonapp.module.goods_detail.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,8 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.alipay.sdk.app.PayTask;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.svprogresshud.SVProgressHUD;
@@ -42,13 +33,10 @@ import com.pgg.yixiannonapp.domain.GoodsDetail.AddCartEvent;
 import com.pgg.yixiannonapp.domain.GoodsDetail.GoodsSku;
 import com.pgg.yixiannonapp.domain.MainEntity;
 import com.pgg.yixiannonapp.domain.Results;
-import com.pgg.yixiannonapp.domain.UserStateBean;
 import com.pgg.yixiannonapp.global.Constant;
 import com.pgg.yixiannonapp.module.goods_detail.GoodsDetailActivity;
-import com.pgg.yixiannonapp.module.pay.PayResult;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
 import com.pgg.yixiannonapp.utils.GlideUtils;
-import com.pgg.yixiannonapp.utils.OrderInfoUtil2_0;
 import com.pgg.yixiannonapp.utils.SPUtils;
 import com.pgg.yixiannonapp.widget.GoodsSkuPopup;
 import com.pgg.yixiannonapp.widget.SlideDetailsLayout;
@@ -56,24 +44,14 @@ import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.loader.ImageLoader;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import rx.Observer;
-
-import static com.pgg.yixiannonapp.global.Constant.APPID;
-import static com.pgg.yixiannonapp.global.Constant.RSA2_PRIVATE;
-import static com.pgg.yixiannonapp.global.Constant.RSA_PRIVATE;
-import static com.pgg.yixiannonapp.global.Constant.SDK_PAY_FLAG;
-
 public class GoodsInfoFragment extends BaseFragment implements SlideDetailsLayout.OnSlideDetailsListener {
 
     private PagerSlidingTabStrip psts_tabs;

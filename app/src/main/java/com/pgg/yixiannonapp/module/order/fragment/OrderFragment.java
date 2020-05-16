@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.alipay.sdk.app.PayTask;
 import com.kennyc.view.MultiStateView;
 import com.pgg.yixiannonapp.R;
@@ -27,22 +26,17 @@ import com.pgg.yixiannonapp.module.pay.PayResult;
 import com.pgg.yixiannonapp.net.httpData.HttpData;
 import com.pgg.yixiannonapp.utils.OrderInfoUtil2_0;
 import com.pgg.yixiannonapp.utils.SPUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import butterknife.BindView;
 import rx.Observer;
-
 import static com.pgg.yixiannonapp.global.Constant.APPID;
 import static com.pgg.yixiannonapp.global.Constant.RSA2_PRIVATE;
 import static com.pgg.yixiannonapp.global.Constant.RSA_PRIVATE;
 import static com.pgg.yixiannonapp.global.Constant.SDK_PAY_FLAG;
 
 public class OrderFragment extends BaseFragment {
-
-
     @BindView(R.id.mOrderRv)
     RecyclerView mOrderRv;
     @BindView(R.id.mMultiStateView)
@@ -50,8 +44,6 @@ public class OrderFragment extends BaseFragment {
     private OrderAdapter mAdapter;
     private List<Order> data = new ArrayList<>();
     private int id = -1;
-
-
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @SuppressWarnings("unused")
@@ -69,12 +61,10 @@ public class OrderFragment extends BaseFragment {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         updateOrderStatus(id, 2, "支付成功");
-
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         Toast.makeText(getContext(), "支付失败", Toast.LENGTH_SHORT).show();
                     }
-
                     break;
                 }
                 default:
@@ -118,7 +108,6 @@ public class OrderFragment extends BaseFragment {
         mOrderRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new OrderAdapter(R.layout.layout_order_item, data);
         mOrderRv.setAdapter(mAdapter);
-
         mAdapter.setOnOptClickListener(new OrderAdapter.OnOptClickListener() {
             @Override
             public void onOptClick(int optType, Order order) {
@@ -178,11 +167,9 @@ public class OrderFragment extends BaseFragment {
         boolean rsa2 = (RSA2_PRIVATE.length() > 0);
         Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2, mTotalPrice);
         String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
-
         String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;
         String sign = OrderInfoUtil2_0.getSign(params, privateKey, rsa2);
         final String orderInfo = orderParam + "&" + sign;
-
         Runnable payRunnable = new Runnable() {
 
             @Override
@@ -197,7 +184,6 @@ public class OrderFragment extends BaseFragment {
                 mHandler.sendMessage(msg);
             }
         };
-
         Thread payThread = new Thread(payRunnable);
         payThread.start();
     }
@@ -258,10 +244,7 @@ public class OrderFragment extends BaseFragment {
                 }
             }, userName, orderStatus);
         }
-
     }
-
-
     /**
      * 取消订单对话框
      */
@@ -275,9 +258,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     @Override
-    protected void managerArguments() {
-
-    }
+    protected void managerArguments() { }
 
     @Override
     public String getUmengFragmentName() {

@@ -89,7 +89,7 @@ public class OrderAdapter extends BaseQuickAdapter<Order,BaseViewHolder> {
                 setOptVisiable(false,false,false,helper);
                 break;
             case OrderStatus.ORDER_CANCELED:
-                mOrderStatusNameTv.setText("待评价");
+                mOrderStatusNameTv.setText("已取消");
                 mOrderStatusNameTv.setTextColor(mContext.getResources().getColor(R.color.common_red));
                 setOptVisiable(false,false,false,helper);
                 break;
